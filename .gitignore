@@ -1,0 +1,15 @@
+# Fichiers système
+.DS_Store
+.claude/
+
+# Fichiers temporaires
+*.tmp
+*.bak
+*~
+
+# Node modules (si utilisé plus tard)
+node_modules/
+
+# Fichiers de sauvegarde
+*.swp
+*.swo

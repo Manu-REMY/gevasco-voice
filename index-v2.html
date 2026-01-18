@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur GEVA-Sco - Conforme modèle officiel</title>
+    <link rel="stylesheet" href="css/styles-v2.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <h1>GEVA-Sco</h1>
+                <p class="subtitle">Scolarisation</p>
+            </div>
+            <div class="action-buttons">
+                <button onclick="resetForm()" class="btn btn-secondary">Réinitialiser</button>
+                <button onclick="saveData()" class="btn btn-save">Sauvegarder</button>
+                <button onclick="generatePDF()" class="btn btn-primary">Générer le PDF</button>
+            </div>
+        </header>
+
+        <div class="form-section">
+            <h2>GEVA-Sco - Document officiel de 6 pages</h2>
+            <p class="info">Remplissez tous les champs ci-dessous. Le PDF généré sera conforme au modèle officiel.</p>
+
+            <!-- ============ PAGE 1 ============ -->
+            <section class="section-card page-section">
+                <h3 class="page-title">📄 Page 1/6 - Informations administratives</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Année scolaire 20</label>
+                        <input type="text" id="annee1" placeholder="24" maxlength="2" size="3"> / 20
+                        <input type="text" id="annee2" placeholder="25" maxlength="2" size="3">
+                    </div>
+                    <div class="form-group">
+                        <label>Date de réunion</label>
+                        <input type="date" id="dateReunion">
+                    </div>
+                </div>
+
+                <h4>Identification</h4>
+                <div class="form-group">
+                    <label>Nom et prénom de l'élève</label>
+                    <input type="text" id="nomEleve" placeholder="RICHARTE Létizia">
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>N° et rue</label>
+                        <input type="text" id="adresseEleve" placeholder="3 Lotissement Les Sylphides">
+                    </div>
+                    <div class="form-group">
+                        <label>Date de naissance</label>
+                        <input type="date" id="dateNaissance">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>Ville</label>
+                        <input type="text" id="villeEleve" placeholder="Montfrin">
+                    </div>
+                    <div class="form-group">
+                        <label>Code postal</label>
+                        <input type="text" id="codePostalEleve" placeholder="30490">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tél.</label>
+                        <input type="tel" id="telEleve">
+                    </div>
+                    <div class="form-group flex-2">
+                        <label>Courriel</label>
+                        <input type="email" id="emailEleve">
+                    </div>
+                </div>
+
+                <h4>Coordonnées des représentants légaux</h4>
+                <div class="parents-grid">
+                    <div class="parent-box">
+                        <strong>Parent 1</strong>
+                        <div class="form-group">
+                            <label><input type="radio" name="civiliteP1" value="Mme"> Mme <input type="radio" name="civiliteP1" value="M"> M.</label>
+                            <input type="text" id="nomP1" placeholder="PAYEN Lydie">
+                        </div>
+                        <input type="text" id="adresseP1" placeholder="N° et rue">
+                        <input type="text" id="cpP1" placeholder="CP" size="8">
+                        <input type="text" id="villeP1" placeholder="Ville">
+                        <input type="tel" id="telP1" placeholder="Tél.">
+                        <input type="email" id="emailP1" placeholder="Courriel">
+                    </div>
+                    <div class="parent-box">
+                        <strong>Parent 2</strong>
+                        <div class="form-group">
+                            <label><input type="radio" name="civiliteP2" value="Mme"> Mme <input type="radio" name="civiliteP2" value="M"> M.</label>
+                            <input type="text" id="nomP2" placeholder="RICHARTE Jean-François">
+                        </div>
+                        <input type="text" id="adresseP2" placeholder="N° et rue">
+                        <input type="text" id="cpP2" placeholder="CP" size="8">
+                        <input type="text" id="villeP2" placeholder="Ville">
+                        <input type="tel" id="telP2" placeholder="Tél.">
+                        <input type="email" id="emailP2" placeholder="Courriel">
+                    </div>
+                    <div class="parent-box">
+                        <strong>Autre responsable légal</strong>
+                        <div class="form-group">
+                            <label><input type="radio" name="civiliteP3" value="Mme"> Mme <input type="radio" name="civiliteP3" value="M"> M.</label>
+                            <input type="text" id="nomP3">
+                        </div>
+                        <input type="text" id="adresseP3" placeholder="N° et rue">
+                        <input type="text" id="cpP3" placeholder="CP" size="8">
+                        <input type="text" id="villeP3" placeholder="Ville">
+                        <input type="tel" id="telP3" placeholder="Tél.">
+                        <input type="email" id="emailP3" placeholder="Courriel">
+                    </div>
+                </div>
+
+                <h4>Points saillants liés à la scolarisation</h4>
+                <div class="form-group">
+                    <label>Nom et coordonnées de l'enseignant référent</label>
+                    <input type="text" id="enseignantReferent" placeholder="Corine MARTINEZ - cdg Claudie Haigneré - Av. de Provence - 30650 Rochefort-du-Gard">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tél.</label>
+                        <input type="tel" id="telEnseignant" placeholder="06 11 53 80 23">
+                    </div>
+                    <div class="form-group flex-2">
+                        <label>Courriel</label>
+                        <input type="email" id="emailEnseignant" placeholder="corine.martinez@ac-montpellier.fr">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>Établissement scolaire fréquenté</label>
+                        <input type="text" id="etablissement" placeholder="EE Amand Peyrot">
+                    </div>
+                    <div class="form-group">
+                        <label>Classe fréquentée</label>
+                        <input type="text" id="classe" placeholder="CP">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>N° et rue</label>
+                    <input type="text" id="adresseEtablissement" placeholder="25 avenue du Dr Félix Clément">
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>Ville</label>
+                        <input type="text" id="villeEtablissement" placeholder="Montfrin">
+                    </div>
+                    <div class="form-group">
+                        <label>Code postal</label>
+                        <input type="text" id="codePostalEtablissement" placeholder="30490">
+                    </div>
+                </div>
+
+                <h4>Parcours de scolarisation</h4>
+                <table class="data-table">
+                    <tr>
+                        <th>Années</th>
+                        <th>Scolarisation</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="parcours1_annee" placeholder="2023-2024"></td>
+                        <td><input type="text" id="parcours1_scol" placeholder="GS école mat Sueanne Crémieux Montfrin"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="parcours2_annee" placeholder="2024-2025"></td>
+                        <td><input type="text" id="parcours2_scol" placeholder="CP EE Amand Peyrot Montfrin"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="parcours3_annee"></td>
+                        <td><input type="text" id="parcours3_scol"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="parcours4_annee"></td>
+                        <td><input type="text" id="parcours4_scol"></td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- ============ PAGE 2 ============ -->
+            <section class="section-card page-section">
+                <h3 class="page-title">📄 Page 2/6 - Conditions actuelles de scolarisation</h3>
+
+                <h4>Plans ou projets formalisés</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="plan_pai"> PAI</label>
+                    <label><input type="checkbox" id="plan_ppre"> PPRE</label>
+                    <label><input type="checkbox" id="plan_pap"> PAP</label>
+                    <label><input type="checkbox" id="plan_mesures"> Mesures éducatives</label>
+                    <label><input type="checkbox" id="plan_autres"> Autres</label>
+                </div>
+                <div class="form-group">
+                    <label>Commentaires (durée de mise en œuvre, effets...)</label>
+                    <textarea id="plan_commentaires" rows="3" placeholder="Aménagements pédagogiques, devoirs adaptés"></textarea>
+                </div>
+
+                <h4>Accompagnement et soins</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="acc_rased"> RASED</label>
+                    <label><input type="checkbox" id="acc_sapad"> SAPAD</label>
+                    <label><input type="checkbox" id="acc_cned"> CNED</label>
+                    <label><input type="checkbox" id="acc_soins_hosp"> Soins hospitaliers</label>
+                    <label><input type="checkbox" id="acc_camsp"> CAMSP</label>
+                    <label><input type="checkbox" id="acc_cmp"> CMP</label>
+                    <label><input type="checkbox" id="acc_cmpp"> CMPP</label>
+                    <label><input type="checkbox" id="acc_ems"> EMS</label>
+                    <label><input type="checkbox" id="acc_sessad"> SESSAD</label>
+                    <label><input type="checkbox" id="acc_liberal"> Soins en libéral</label>
+                    <label><input type="checkbox" id="acc_autres"> Autres</label>
+                </div>
+                <div class="form-group">
+                    <label>Commentaires, précisions</label>
+                    <textarea id="acc_commentaires" rows="3" placeholder="Orthophonie : depuis novembre 20023, Mme Maurin à Rognonas, 1x/semaine"></textarea>
+                </div>
+
+                <h4>Conditions matérielles</h4>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="mat_amenagements"> Aménagements et adaptations pédagogiques</label>
+                    <label><input type="checkbox" id="mat_communication"> Outils de communication</label>
+                    <label><input type="checkbox" id="mat_informatique"> Matériel informatique et audiovisuel</label>
+                    <label><input type="checkbox" id="mat_auditif"> Matériel déficience auditive</label>
+                    <label><input type="checkbox" id="mat_visuel"> Matériel déficience visuelle</label>
+                    <label><input type="checkbox" id="mat_mobilier"> Mobilier et petits matériels</label>
+                    <label><input type="checkbox" id="mat_transport"> Transport</label>
+                    <label><input type="checkbox" id="mat_autres"> Autres</label>
+                </div>
+                <div class="form-group">
+                    <label>Commentaires, précisions</label>
+                    <textarea id="mat_commentaires" rows="2"></textarea>
+                </div>
+
+                <h4>Évaluation de la scolarité (à renseigner obligatoirement)</h4>
+                <div class="form-group">
+                    <label>Niveau d'enseignement (CP, CE1...). Si non homogène, préciser:</label>
+                    <input type="text" id="eval_niveau" placeholder="CP">
+                </div>
+                <div class="radio-group">
+                    <label><input type="radio" name="eval_type" value="sans_am_ok"> scolarité sans aménagements ayant permis des acquisitions comparables</label>
+                    <label><input type="radio" name="eval_type" value="sans_am_ko"> scolarité sans aménagements n'ayant pas permis d'accéder aux acquisitions attendues</label>
+                    <label><input type="radio" name="eval_type" value="avec_am_ok"> scolarité avec aménagements ayant permis les acquisitions attendues</label>
+                    <label><input type="radio" name="eval_type" value="avec_am_ko"> scolarité avec aménagements n'ayant pas permis d'accéder aux acquisitions attendues</label>
+                </div>
+
+                <div class="form-group">
+                    <label>Observations détaillées sur la scolarité</label>
+                    <textarea id="eval_observations" rows="8" placeholder="C'est une année de CP difficile pour Letizia. Elle rencontre de grosses difficultés à suivre le programme..."></textarea>
+                </div>
+            </section>
+
+            <!-- ============ PAGE 3 ============ -->
+            <section class="section-card page-section">
+                <h3 class="page-title">📄 Page 3/6 - Emploi du temps actuel de l'élève</h3>
+
+                <table class="emploi-temps-table">
+                    <thead>
+                        <tr>
+                            <th width="15%"></th>
+                            <th width="28%">MATIN</th>
+                            <th width="14%">MIDI</th>
+                            <th width="43%">APRÈS-MIDI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Lundi</strong></td>
+                            <td><textarea id="edt_lundi_matin" rows="2">Classe</textarea></td>
+                            <td><textarea id="edt_lundi_midi" rows="2"></textarea></td>
+                            <td><textarea id="edt_lundi_aprem" rows="2">Classe</textarea></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mardi</strong></td>
+                            <td><textarea id="edt_mardi_matin" rows="2">Classe</textarea></td>
+                            <td><textarea id="edt_mardi_midi" rows="2"></textarea></td>
+                            <td><textarea id="edt_mardi_aprem" rows="2">Classe</textarea></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mercredi</strong></td>
+                            <td><textarea id="edt_mercredi_matin" rows="2"></textarea></td>
+                            <td><textarea id="edt_mercredi_midi" rows="2"></textarea></td>
+                            <td><textarea id="edt_mercredi_aprem" rows="2"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jeudi</strong></td>
+                            <td><textarea id="edt_jeudi_matin" rows="2">Classe</textarea></td>
+                            <td><textarea id="edt_jeudi_midi" rows="2"></textarea></td>
+                            <td><textarea id="edt_jeudi_aprem" rows="2">Classe\nOrthophonie</textarea></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vendredi</strong></td>
+                            <td><textarea id="edt_vendredi_matin" rows="2">Classe</textarea></td>
+                            <td><textarea id="edt_vendredi_midi" rows="2"></textarea></td>
+                            <td><textarea id="edt_vendredi_aprem" rows="2">Classe</textarea></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Samedi</strong></td>
+                            <td><textarea id="edt_samedi_matin" rows="2"></textarea></td>
+                            <td><textarea id="edt_samedi_midi" rows="2"></textarea></td>
+                            <td><textarea id="edt_samedi_aprem" rows="2"></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============ PAGES 4-5 ============ -->
+            <section class="section-card page-section">
+                <h3 class="page-title">📄 Pages 4-5/6 - Observation des activités de l'élève</h3>
+                <p class="info-text">Pour chaque activité, cochez A, B, C, D ou Sans objet. Si C ou D, remplissez les commentaires.</p>
+                <p class="legend">
+                    <strong>A:</strong> sans difficulté et seul |
+                    <strong>B:</strong> difficultés ponctuelles |
+                    <strong>C:</strong> difficultés régulières |
+                    <strong>D:</strong> non réalisée
+                </p>
+
+                <!-- Je vais créer une structure simplifiée pour la démo -->
+                <div class="form-group">
+                    <label>Cadre 1: Obstacles à la réalisation de l'activité</label>
+                    <textarea id="obs_cadre1" rows="5" placeholder="Grande immaturité psychologique et intellectuelle, élève encadrée comme une enfant de maternelle..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Cadre 2: Points d'appui et commentaires</label>
+                    <textarea id="obs_cadre2" rows="5" placeholder="Écriture, découpage, arts plastiques..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Évolutions observées et perspectives</label>
+                    <textarea id="obs_evolutions" rows="6" placeholder="En début d'année, Létizia ne parlais pratiquement pas..."></textarea>
+                </div>
+            </section>
+
+            <!-- ============ PAGE 6 ============ -->
+            <section class="section-card page-section">
+                <h3 class="page-title">📄 Page 6/6 - Remarques et participants</h3>
+
+                <div class="form-group">
+                    <label>Remarques de l'élève et/ou de ses parents (projet de vie, projet professionnel)</label>
+                    <textarea id="remarques_parents" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Remarques des professionnels</label>
+                    <textarea id="remarques_pro" rows="4"></textarea>
+                </div>
+
+                <h4>Participants à la réunion</h4>
+                <table class="data-table">
+                    <tr>
+                        <th>Nom-Prénom</th>
+                        <th>Fonction</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="part1_nom"></td>
+                        <td><input type="text" id="part1_fonction"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="part2_nom"></td>
+                        <td><input type="text" id="part2_fonction"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="part3_nom"></td>
+                        <td><input type="text" id="part3_fonction"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="part4_nom"></td>
+                        <td><input type="text" id="part4_fonction"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="part5_nom"></td>
+                        <td><input type="text" id="part5_fonction"></td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- AIDE SUGGESTIONS -->
+            <section class="section-card">
+                <h3>💡 Aide - Suggestions de phrases pour CP</h3>
+                <div id="suggestionsCP" class="suggestions-buttons"></div>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/phrases-cp.js"></script>
+    <script src="js/pdf-generator.js"></script>
+    <script src="js/app-v2.js"></script>
+</body>
+</html>

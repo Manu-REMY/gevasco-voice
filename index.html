@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur GEVA-Sco - Assistant de remplissage</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <h1>GEVA-Sco</h1>
+                <p class="subtitle">Scolarisation</p>
+            </div>
+            <div class="action-buttons">
+                <button onclick="resetForm()" class="btn btn-secondary">Réinitialiser le formulaire</button>
+                <button onclick="saveData()" class="btn btn-save">Sauvegarder</button>
+                <button onclick="generatePDF()" class="btn btn-primary">Générer le PDF</button>
+            </div>
+        </header>
+
+        <div class="form-section">
+            <h2>Éléments relatifs à un parcours de scolarisation et/ou de formation : support de recueil d'informations</h2>
+            <div class="badge">PREMIÈRE DEMANDE</div>
+
+            <!-- Année scolaire et date -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pour l'année scolaire 20</label>
+                    <input type="text" id="annee1" placeholder="24" maxlength="2"> / 20
+                    <input type="text" id="annee2" placeholder="25" maxlength="2">
+                </div>
+                <div class="form-group">
+                    <label>Date de réunion de l'équipe éducative</label>
+                    <input type="date" id="dateReunion">
+                </div>
+            </div>
+
+            <!-- IDENTIFICATION -->
+            <section class="section-card">
+                <h3>Identification</h3>
+
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>Nom et prénom de l'élève</label>
+                        <input type="text" id="nomEleve" placeholder="NOM Prénom">
+                    </div>
+                    <div class="form-group">
+                        <label>Date de naissance</label>
+                        <input type="date" id="dateNaissance">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>N° et rue</label>
+                        <input type="text" id="adresseEleve" placeholder="3 Lotissement Les Sylphides">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>Ville</label>
+                        <input type="text" id="villeEleve" placeholder="Montfrin">
+                    </div>
+                    <div class="form-group">
+                        <label>Code postal</label>
+                        <input type="text" id="codePostalEleve" placeholder="30490">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tél.</label>
+                        <input type="tel" id="telEleve">
+                    </div>
+                    <div class="form-group flex-2">
+                        <label>Courriel</label>
+                        <input type="email" id="emailEleve">
+                    </div>
+                </div>
+            </section>
+
+            <!-- COORDONNÉES DES REPRÉSENTANTS LÉGAUX -->
+            <section class="section-card">
+                <h3>Coordonnées des représentants légaux</h3>
+
+                <div class="parents-grid">
+                    <!-- Parent 1 -->
+                    <div class="parent-section">
+                        <h4>Parents - Parent 1</h4>
+                        <div class="form-group">
+                            <label>
+                                <input type="radio" name="civiliteP1" value="Mme" checked> Mme
+                                <input type="radio" name="civiliteP1" value="M"> M.
+                            </label>
+                            <input type="text" id="nomP1" placeholder="PAYEN Lydie">
+                        </div>
+                        <div class="form-group">
+                            <label>N° et rue</label>
+                            <input type="text" id="adresseP1">
+                        </div>
+                        <div class="form-group">
+                            <label>CP</label>
+                            <input type="text" id="cpP1">
+                        </div>
+                        <div class="form-group">
+                            <label>Ville</label>
+                            <input type="text" id="villeP1">
+                        </div>
+                        <div class="form-group">
+                            <label>Tél.</label>
+                            <input type="tel" id="telP1" placeholder="06 61 54 89 10">
+                        </div>
+                        <div class="form-group">
+                            <label>Courriel</label>
+                            <input type="email" id="emailP1" placeholder="lydiejf@hotmail.com">
+                        </div>
+                    </div>
+
+                    <!-- Parent 2 -->
+                    <div class="parent-section">
+                        <h4>Parents - Parent 2</h4>
+                        <div class="form-group">
+                            <label>
+                                <input type="radio" name="civiliteP2" value="Mme"> Mme
+                                <input type="radio" name="civiliteP2" value="M" checked> M.
+                            </label>
+                            <input type="text" id="nomP2" placeholder="RICHARTE Jean-François">
+                        </div>
+                        <div class="form-group">
+                            <label>N° et rue</label>
+                            <input type="text" id="adresseP2">
+                        </div>
+                        <div class="form-group">
+                            <label>CP</label>
+                            <input type="text" id="cpP2">
+                        </div>
+                        <div class="form-group">
+                            <label>Ville</label>
+                            <input type="text" id="villeP2">
+                        </div>
+                        <div class="form-group">
+                            <label>Tél.</label>
+                            <input type="tel" id="telP2" placeholder="06 61 55 34 17">
+                        </div>
+                        <div class="form-group">
+                            <label>Courriel</label>
+                            <input type="email" id="emailP2" placeholder="jfr-30@hotmail.fr">
+                        </div>
+                    </div>
+
+                    <!-- Autre responsable légal -->
+                    <div class="parent-section">
+                        <h4>Autre responsable légal</h4>
+                        <div class="form-group">
+                            <label>
+                                <input type="radio" name="civiliteP3" value="Mme"> Mme
+                                <input type="radio" name="civiliteP3" value="M"> M.
+                            </label>
+                            <input type="text" id="nomP3">
+                        </div>
+                        <div class="form-group">
+                            <label>N° et rue</label>
+                            <input type="text" id="adresseP3">
+                        </div>
+                        <div class="form-group">
+                            <label>CP</label>
+                            <input type="text" id="cpP3">
+                        </div>
+                        <div class="form-group">
+                            <label>Ville</label>
+                            <input type="text" id="villeP3">
+                        </div>
+                        <div class="form-group">
+                            <label>Tél.</label>
+                            <input type="tel" id="telP3">
+                        </div>
+                        <div class="form-group">
+                            <label>Courriel</label>
+                            <input type="email" id="emailP3">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- POINTS SAILLANTS LIÉS À LA SCOLARISATION -->
+            <section class="section-card">
+                <h3>Points saillants liés à la scolarisation</h3>
+
+                <div class="form-group">
+                    <label>Nom et coordonnées de l'enseignant référent du secteur</label>
+                    <input type="text" id="enseignantReferent" placeholder="Corine MARTINEZ - cdg Claudie Haigneré - Av. de Provence - 30650 Rochefort-du-Gard">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tél.</label>
+                        <input type="tel" id="telEnseignant" placeholder="06 11 53 80 23">
+                    </div>
+                    <div class="form-group flex-2">
+                        <label>Courriel</label>
+                        <input type="email" id="emailEnseignant" placeholder="corine.martinez@ac-montpellier.fr">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>Établissement scolaire fréquenté</label>
+                        <input type="text" id="etablissement" placeholder="EE Amand Peyrot">
+                    </div>
+                    <div class="form-group">
+                        <label>Classe fréquentée</label>
+                        <input type="text" id="classe" placeholder="CP">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>N° et rue</label>
+                    <input type="text" id="adresseEtablissement" placeholder="25 avenue du Dr Félix Clément">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>Ville</label>
+                        <input type="text" id="villeEtablissement" placeholder="Montfrin">
+                    </div>
+                    <div class="form-group">
+                        <label>Code postal</label>
+                        <input type="text" id="codePostalEtablissement" placeholder="30490">
+                    </div>
+                </div>
+
+                <h4>Parcours de scolarisation</h4>
+                <div id="parcoursContainer">
+                    <div class="parcours-row">
+                        <div class="form-group">
+                            <label>Années</label>
+                            <input type="text" class="parcours-annee" placeholder="2023-2024">
+                        </div>
+                        <div class="form-group flex-3">
+                            <label>Scolarisation</label>
+                            <input type="text" class="parcours-scolarisation" placeholder="GS école mat Sueanne Crémieux Montfrin">
+                        </div>
+                        <button type="button" onclick="removeParcours(this)" class="btn-remove">✕</button>
+                    </div>
+                    <div class="parcours-row">
+                        <div class="form-group">
+                            <label>Années</label>
+                            <input type="text" class="parcours-annee" placeholder="2024-2025">
+                        </div>
+                        <div class="form-group flex-3">
+                            <label>Scolarisation</label>
+                            <input type="text" class="parcours-scolarisation" placeholder="CP EE Amand Peyrot Montfrin">
+                        </div>
+                        <button type="button" onclick="removeParcours(this)" class="btn-remove">✕</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addParcours()" class="btn btn-secondary">+ Ajouter une année</button>
+            </section>
+
+            <!-- OBSERVATIONS PÉDAGOGIQUES -->
+            <section class="section-card">
+                <h3>Observations pédagogiques et éducatives</h3>
+
+                <div class="suggestions-area">
+                    <h4>💡 Suggestions de phrases (cliquez pour insérer)</h4>
+                    <div id="suggestionsCP" class="suggestions-buttons"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Comportement et vie en classe</label>
+                    <textarea id="comportement" rows="4" placeholder="Décrivez le comportement de l'élève en classe..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Apprentissages - Français</label>
+                    <textarea id="francais" rows="4" placeholder="Niveau en français, lecture, écriture..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Apprentissages - Mathématiques</label>
+                    <textarea id="mathematiques" rows="4" placeholder="Niveau en mathématiques, numération, calcul..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Autonomie et compétences sociales</label>
+                    <textarea id="autonomie" rows="4" placeholder="Niveau d'autonomie, relations avec les pairs..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Besoins identifiés</label>
+                    <textarea id="besoins" rows="4" placeholder="Quels sont les besoins spécifiques de l'élève?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Aménagements et adaptations proposés</label>
+                    <textarea id="amenagements" rows="4" placeholder="Quels aménagements proposez-vous?"></textarea>
+                </div>
+            </section>
+
+            <!-- SYNTHÈSE -->
+            <section class="section-card">
+                <h3>Synthèse et propositions</h3>
+
+                <div class="form-group">
+                    <label>Synthèse générale</label>
+                    <textarea id="synthese" rows="6" placeholder="Synthèse générale de la situation de l'élève..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Propositions pour le parcours de scolarisation</label>
+                    <textarea id="propositions" rows="6" placeholder="Vos propositions pour la suite du parcours..."></textarea>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/phrases-cp.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

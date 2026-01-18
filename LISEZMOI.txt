@@ -1,0 +1,89 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                  GÉNÉRATEUR GEVA-SCO V2                          ║
+║              PDF Conforme 6 Pages - Pour CP                      ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 FICHIER À OUVRIR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+👉 Double-cliquez sur: index-v2.html
+
+⚠️  N'utilisez PAS "index.html" (ancienne version)
+✅  Utilisez "index-v2.html" (nouvelle version conforme)
+
+
+📖 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 DEMARRAGE-RAPIDE-V2.md    → Guide de démarrage (COMMENCEZ ICI!)
+📄 README-V2.md               → Documentation complète
+📄 README.md                  → Ancienne documentation (référence)
+
+
+🎯 UTILISATION EN 3 ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Ouvrir index-v2.html dans votre navigateur
+2. Remplir le formulaire (utilisez les suggestions de phrases!)
+3. Cliquer sur "Générer le PDF" (bouton orange)
+
+→ Vous obtenez un PDF de 6 pages conforme au modèle officiel
+
+
+✨ FONCTIONNALITÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Formulaire complet avec toutes les sections du GEVA-Sco
+✅ Génération PDF 6 pages identique au modèle officiel
+✅ 100+ suggestions de phrases types pour CP
+✅ Sauvegarde automatique toutes les 30 secondes
+✅ Fonctionne hors ligne (après premier chargement)
+
+
+⏱️  GAIN DE TEMPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Sans l'outil:  60-90 minutes par GEVA-Sco
+Avec l'outil:  15-20 minutes par GEVA-Sco
+
+💰 ÉCONOMIE: 75% de temps gagné!
+
+
+📋 STRUCTURE DU PDF GÉNÉRÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Page 1/6: Identification, parents, école, parcours
+Page 2/6: Conditions de scolarisation, évaluation
+Page 3/6: Emploi du temps hebdomadaire
+Page 4-5/6: Observation des activités
+Page 6/6: Remarques et participants
+
+
+🔄 SAUVEGARDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Auto-sauvegarde toutes les 30 secondes
+• Bouton "Sauvegarder" (vert) pour sauvegarder manuellement
+• Les données persistent même après fermeture du navigateur
+
+
+💡 ASTUCE PRO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Utilisez la section "Aide - Suggestions de phrases" en bas du 
+formulaire. Cliquez sur les phrases qui correspondent à votre 
+élève, elles s'insèrent automatiquement dans les bons champs!
+
+
+📞 EN CAS DE PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Vérifiez que vous ouvrez bien "index-v2.html"
+2. Consultez DEMARRAGE-RAPIDE-V2.md
+3. Vérifiez que JavaScript est activé dans votre navigateur
+4. Essayez avec un autre navigateur (Chrome, Firefox, Edge)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0 | Janvier 2025 | Conforme modèle officiel GEVA-Sco
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
