@@ -13,3 +13,5 @@ node_modules/
 # Fichiers de sauvegarde
 *.swp
 *.swo
+# Fichier modèle PDF (ne pas versionner)
+*.pdf
