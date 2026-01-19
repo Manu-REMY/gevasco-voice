@@ -199,5 +199,12 @@ function insertSuggestion(fieldId, text) {
     }, 500);
 }
 
-// Charger les suggestions au chargement de la page
-document.addEventListener('DOMContentLoaded', loadSuggestions);
+// Export for Node.js backend
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = phrasesCP;
+}
+
+// Charger les suggestions au chargement de la page (browser only)
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', loadSuggestions);
+}
