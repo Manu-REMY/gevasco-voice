@@ -24,7 +24,7 @@ install_dependencies:
   script:
     - echo "Installation des dépendances du backend..."
     - cd backend
-    - npm ci --prefer-offline --no-audit
+    - npm install --prefer-offline --no-audit
   artifacts:
     paths:
       - backend/node_modules/
