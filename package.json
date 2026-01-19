@@ -1,0 +1,21 @@
+{
+  "name": "gevasco-voice-v3",
+  "version": "3.0.0",
+  "description": "GEVA-Sco Voice Assistant avec OpenAI",
+  "scripts": {
+    "install-backend": "cd backend && npm install",
+    "test-setup": "node backend/test-setup.js",
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "help": "echo '\n🎤 GEVA-Sco Voice V3 - Commandes disponibles:\n\n  npm run install-backend  - Installer les dépendances\n  npm run test-setup       - Vérifier la configuration\n  npm start                - Démarrer le serveur\n  npm run dev              - Mode développement (auto-reload)\n\n📚 Documentation: README-VOICE-V3.md\n🚀 Démarrage rapide: DEMARRAGE-RAPIDE.md\n'"
+  },
+  "keywords": [
+    "geva-sco",
+    "voice",
+    "openai",
+    "whisper",
+    "education"
+  ],
+  "author": "",
+  "license": "ISC"
+}
