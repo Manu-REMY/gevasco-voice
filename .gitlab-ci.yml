@@ -1,0 +1,130 @@
+# Configuration CI/CD pour GEVA-Sco Voice Assistant V3
+# Forge Edu - GitLab CI
+
+stages:
+  - install
+  - test
+  - build
+  - deploy
+
+variables:
+  NODE_VERSION: "18"
+
+# Cache pour accélérer les builds
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - backend/node_modules/
+    - node_modules/
+
+# Installation des dépendances
+install_dependencies:
+  stage: install
+  image: node:${NODE_VERSION}
+  script:
+    - echo "Installation des dépendances du backend..."
+    - cd backend
+    - npm ci --prefer-offline --no-audit
+  artifacts:
+    paths:
+      - backend/node_modules/
+    expire_in: 1 hour
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Vérification de la configuration
+verify_setup:
+  stage: test
+  image: node:${NODE_VERSION}
+  dependencies:
+    - install_dependencies
+  script:
+    - echo "Vérification de la structure du projet..."
+    - ls -la
+    - test -f "backend/server.js" || (echo "❌ backend/server.js manquant" && exit 1)
+    - test -f "backend/package.json" || (echo "❌ backend/package.json manquant" && exit 1)
+    - test -f "voice-v3.html" || (echo "❌ voice-v3.html manquant" && exit 1)
+    - echo "✅ Structure du projet validée"
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Vérification de la syntaxe JavaScript
+lint_check:
+  stage: test
+  image: node:${NODE_VERSION}
+  dependencies:
+    - install_dependencies
+  script:
+    - echo "Vérification de la syntaxe JavaScript..."
+    - cd backend
+    - node -c server.js
+    - echo "✅ Syntaxe JavaScript validée"
+  allow_failure: true
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Build (optionnel, pour validation)
+build_project:
+  stage: build
+  image: node:${NODE_VERSION}
+  dependencies:
+    - install_dependencies
+  script:
+    - echo "Build du projet GEVA-Sco Voice V3..."
+    - echo "Version $(node --version)"
+    - echo "NPM version $(npm --version)"
+    - cd backend
+    - npm list
+    - echo "✅ Build terminé avec succès"
+  artifacts:
+    paths:
+      - backend/
+      - voice-v3.html
+      - index.html
+      - js/
+      - css/
+    expire_in: 1 week
+  only:
+    - main
+    - develop
+
+# Pages GitLab (déploiement statique)
+pages:
+  stage: deploy
+  image: node:${NODE_VERSION}
+  dependencies:
+    - build_project
+  script:
+    - echo "Préparation du déploiement GitLab Pages..."
+    - mkdir -p public
+    - cp -r *.html public/ 2>/dev/null || true
+    - cp -r js public/ 2>/dev/null || true
+    - cp -r css public/ 2>/dev/null || true
+    - cp -r *.md public/ 2>/dev/null || true
+    - echo "✅ Déploiement préparé"
+    - ls -la public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - main
+
+# Notification de succès
+success_notification:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - echo "🎉 Pipeline exécuté avec succès!"
+    - echo "✅ GEVA-Sco Voice Assistant V3 - Build OK"
+    - echo "📦 Version 3.0.0"
+  when: on_success
+  only:
+    - main
+    - develop
