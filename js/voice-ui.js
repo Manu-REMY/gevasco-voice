@@ -96,8 +96,15 @@ class VoiceUI {
 
         const files = e.dataTransfer.files;
         if (files.length > 0 && files[0].type === 'application/pdf') {
-          this.elements.pdfInput.files = files;
-          this.elements.pdfInput.dispatchEvent(new Event('change'));
+          // Create a custom event with the file
+          const event = new Event('change', { bubbles: true });
+          Object.defineProperty(event, 'target', {
+            writable: false,
+            value: { files: files }
+          });
+          this.elements.pdfInput.dispatchEvent(event);
+        } else if (files.length > 0) {
+          this.showToast('Veuillez déposer un fichier PDF', 'error');
         }
       });
     }
