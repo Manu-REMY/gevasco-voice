@@ -118,27 +118,11 @@ build_project:
     - main
     - develop
 
-# Pages GitLab (déploiement statique)
-pages:
-  stage: deploy
-  image: node:${NODE_VERSION}
-  dependencies:
-    - build_project
-  script:
-    - echo "Préparation du déploiement GitLab Pages..."
-    - mkdir -p public
-    - cp -r *.html public/ 2>/dev/null || true
-    - cp -r js public/ 2>/dev/null || true
-    - cp -r css public/ 2>/dev/null || true
-    - cp -r *.md public/ 2>/dev/null || true
-    - echo "✅ Déploiement préparé"
-    - ls -la public/
-  artifacts:
-    paths:
-      - public
-    expire_in: 30 days
-  only:
-    - main
+# Pages GitLab désactivé - L'application nécessite un backend Node.js
+# Pour déployer : utilisez Docker (voir DEPLOIEMENT-FORGE.md)
+# pages:
+#   stage: deploy
+#   ...
 
 # Notification de succès
 success_notification:
