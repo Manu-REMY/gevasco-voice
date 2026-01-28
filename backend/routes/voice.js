@@ -1,13 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const path = require('path');
 const whisperService = require('../services/whisper.service');
 const gptService = require('../services/gpt.service');
 const ttsService = require('../services/tts.service');
 
+// Map MIME types to file extensions for Whisper API
+const mimeToExt = {
+  'audio/webm': '.webm',
+  'audio/mp4': '.mp4',
+  'audio/mpeg': '.mp3',
+  'audio/wav': '.wav',
+  'audio/ogg': '.ogg'
+};
+
+// Configure multer storage to preserve file extension
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../uploads/'));
+  },
+  filename: (req, file, cb) => {
+    const ext = mimeToExt[file.mimetype] || '.webm';
+    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${ext}`;
+    cb(null, uniqueName);
+  }
+});
+
 // Configure multer for audio upload
 const upload = multer({
-  dest: 'backend/uploads/',
+  storage: storage,
   limits: {
     fileSize: parseInt(process.env.MAX_AUDIO_SIZE_MB || 25) * 1024 * 1024
   },

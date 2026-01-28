@@ -18,3 +18,8 @@ node_modules/
 .env
 backend/uploads/
 backend/node_modules/
+
+# Fichier contenant les clés API (ne jamais commiter)
+API-KEY.md
+api-key*
+*api*key*
