@@ -4,7 +4,11 @@
  */
 class VoiceAPIClient {
   constructor() {
-    this.baseURL = 'http://localhost:3000/api';
+    // Détection automatique de l'URL de l'API
+    // En production (Render, etc.), utilise l'URL courante
+    // En local, utilise localhost:3000
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    this.baseURL = isLocalhost ? 'http://localhost:3000/api' : `${window.location.origin}/api`;
   }
 
   /**

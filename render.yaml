@@ -1,0 +1,20 @@
+# Configuration Render.com pour GEVA-Sco Voice Assistant V3
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: gevasco-voice
+    runtime: node
+    region: frankfurt  # Région Europe pour la France
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: OPENAI_API_KEY
+        sync: false  # À configurer manuellement dans le dashboard Render
+    healthCheckPath: /api/health
+    autoDeploy: true  # Déploiement automatique à chaque push
