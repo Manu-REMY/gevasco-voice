@@ -116,6 +116,34 @@ class VoiceAPIClient {
   }
 
   /**
+   * Remplir le PDF original avec les données de l'entretien
+   * @param {string} sessionId - ID de session du PDF uploadé
+   * @param {Object} extractedData - Données extraites du PDF initial
+   * @param {Object} interviewData - Réponses de l'entretien vocal
+   * @returns {Blob} - Le PDF rempli
+   */
+  async fillPDF(sessionId, extractedData, interviewData) {
+    const response = await fetch(`${this.baseURL}/pdf/fill`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sessionId: sessionId,
+        extractedData: extractedData,
+        interviewData: interviewData
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: response.statusText }));
+      throw new Error(`Remplissage PDF échoué: ${error.error || response.statusText}`);
+    }
+
+    return await response.blob();
+  }
+
+  /**
    * Check API health
    */
   async checkHealth() {

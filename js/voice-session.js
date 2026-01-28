@@ -90,10 +90,21 @@ class VoiceSession {
   }
 
   /**
-   * Get all responses
+   * Get all responses (array)
    */
   getResponses() {
     return this.responses;
+  }
+
+  /**
+   * Get all responses indexed by questionId
+   */
+  getAllResponses() {
+    const indexed = {};
+    for (const response of this.responses) {
+      indexed[response.questionId] = response;
+    }
+    return indexed;
   }
 
   /**

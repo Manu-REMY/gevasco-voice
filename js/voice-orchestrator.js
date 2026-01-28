@@ -15,6 +15,9 @@ class VoiceOrchestrator {
     this.audioChunks = [];
     this.currentAudio = null;
 
+    // Session ID pour le PDF original (utilisé pour le remplissage)
+    this.pdfSessionId = null;
+
     this.init();
   }
 
@@ -178,6 +181,10 @@ class VoiceOrchestrator {
       const result = await this.apiClient.extractPDF(file);
 
       if (result.success) {
+        // Stocker le sessionId pour le remplissage ultérieur
+        this.pdfSessionId = result.sessionId;
+        console.log('PDF Session ID:', this.pdfSessionId);
+
         this.session.initWithPDFData(result.data);
         this.ui.displayExtractedData(result.data);
         this.ui.showToast('Données extraites avec succès', 'success');
@@ -473,23 +480,87 @@ class VoiceOrchestrator {
   }
 
   /**
-   * Generate final PDF
+   * Generate final PDF - Remplit le PDF original avec les données collectées
    */
-  generateFinalPDF() {
-    try {
-      const completeData = this.session.getFormData();
-
-      // Check if pdf-generator.js is loaded
-      if (typeof generatePDF === 'function') {
-        generatePDF(completeData);
-        this.ui.showToast('PDF généré avec succès', 'success');
-      } else {
-        throw new Error('Le générateur de PDF n\'est pas chargé');
-      }
-    } catch (error) {
-      console.error('PDF generation error:', error);
-      this.ui.showError('Erreur lors de la génération du PDF: ' + error.message);
+  async generateFinalPDF() {
+    if (!this.pdfSessionId) {
+      this.ui.showError('Session PDF expirée. Veuillez recharger le PDF original.');
+      return;
     }
+
+    this.ui.showLoading('Remplissage du PDF en cours...');
+
+    try {
+      const formData = this.session.getFormData();
+
+      // Préparer les données de l'entretien pour le remplissage
+      const interviewData = this.prepareInterviewDataForPDF();
+
+      // Appeler l'API pour remplir le PDF
+      const pdfBlob = await this.apiClient.fillPDF(
+        this.pdfSessionId,
+        formData,
+        interviewData
+      );
+
+      // Télécharger le PDF rempli
+      const nomEleve = formData.nomEleve || 'eleve';
+      const date = new Date().toISOString().split('T')[0];
+      const filename = `GEVA-Sco_${nomEleve.replace(/\s+/g, '_')}_${date}.pdf`;
+
+      const downloadUrl = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+
+      this.ui.showToast('PDF complété et téléchargé avec succès', 'success');
+
+    } catch (error) {
+      console.error('PDF fill error:', error);
+      this.ui.showError('Erreur lors du remplissage du PDF: ' + error.message);
+    } finally {
+      this.ui.hideLoading();
+    }
+  }
+
+  /**
+   * Prépare les données de l'entretien pour le mapping PDF
+   */
+  prepareInterviewDataForPDF() {
+    const responses = this.session.getAllResponses();
+    const interviewData = {};
+
+    // Mapper les réponses des questions vers les clés attendues par le service
+    const questionMapping = {
+      'vue_ensemble': 'question1',
+      'comportement_detail': 'question2',
+      'lecture': 'question3',
+      'ecriture': 'question4',
+      'comprehension': 'question5',
+      'mathematiques': 'question6',
+      'autonomie': 'question7',
+      'besoins': 'question8',
+      'amenagements': 'question9',
+      'evolutions': 'question10'
+    };
+
+    for (const [questionId, mappedKey] of Object.entries(questionMapping)) {
+      if (responses[questionId] && responses[questionId].enriched) {
+        interviewData[mappedKey] = responses[questionId].enriched.enrichedText || responses[questionId].enriched;
+      }
+    }
+
+    // Ajouter le résumé final
+    const summaryText = this.ui.elements.summaryText?.textContent;
+    if (summaryText) {
+      interviewData.summary = summaryText;
+    }
+
+    return interviewData;
   }
 }
 

@@ -9,7 +9,7 @@ Interface vocale intelligente pour remplir automatiquement un GEVA-Sco à partir
 - **Transcription Whisper**: Conversion parole → texte avec haute précision
 - **Enrichissement GPT-4**: Structuration et formulation professionnelle des réponses
 - **Confirmation TTS**: Relecture vocale des réponses structurées
-- **Génération PDF finale**: Document complet 6 pages conforme au modèle officiel
+- **Remplissage PDF**: Le PDF original est complété (pas régénéré) - structure et champs préservés
 
 ## 📋 Prérequis
 
@@ -169,7 +169,8 @@ Gevasco/
 │   │   ├── whisper.service.js    # Transcription audio
 │   │   ├── gpt.service.js        # Enrichissement GPT-4
 │   │   ├── tts.service.js        # Synthèse vocale
-│   │   └── pdf-parser.service.js # Parsing PDF
+│   │   ├── pdf-parser.service.js # Extraction données PDF
+│   │   └── pdf-filler.service.js # Remplissage champs PDF (pdf-lib)
 │   └── uploads/                  # Fichiers temporaires
 │
 ├── js/
@@ -177,7 +178,7 @@ Gevasco/
 │   ├── voice-api-client.js       # Client API backend
 │   ├── voice-session.js          # Gestion état session
 │   ├── voice-ui.js               # Interface utilisateur
-│   ├── pdf-generator.js          # Génération PDF finale
+│   ├── (pdf-generator.js supprimé - remplissage côté serveur)
 │   └── phrases-cp.js             # Bibliothèque phrases
 │
 ├── css/
