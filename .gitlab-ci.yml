@@ -9,6 +9,8 @@ stages:
 
 variables:
   NODE_VERSION: "18"
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
 
 # Cache pour accélérer les builds
 cache:
@@ -69,6 +71,24 @@ lint_check:
     - develop
     - merge_requests
 
+# Build Docker Image
+build_docker:
+  stage: build
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  before_script:
+    - docker info
+  script:
+    - echo "🐳 Construction de l'image Docker GEVA-Sco Voice V3..."
+    - docker build -t gevasco-voice:${CI_COMMIT_SHORT_SHA} .
+    - docker build -t gevasco-voice:latest .
+    - echo "✅ Image Docker construite avec succès"
+    - docker images | grep gevasco-voice
+  only:
+    - main
+    - develop
+
 # Build (optionnel, pour validation)
 build_project:
   stage: build
@@ -89,6 +109,10 @@ build_project:
       - index.html
       - js/
       - css/
+      - Dockerfile
+      - docker-compose.yml
+      - start.sh
+      - .env.example
     expire_in: 1 week
   only:
     - main

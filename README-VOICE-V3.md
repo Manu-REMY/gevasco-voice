@@ -19,14 +19,49 @@ Interface vocale intelligente pour remplir automatiquement un GEVA-Sco à partir
 
 ## 🚀 Installation
 
-### 1. Installer les dépendances
+### Option 1: Démarrage rapide avec Docker (Recommandé)
+
+Le moyen le plus simple de démarrer l'application:
+
+```bash
+# 1. Configurer l'environnement
+cp .env.example .env
+# Éditez .env et ajoutez votre clé API OpenAI
+
+# 2. Lancer l'application
+./start.sh
+```
+
+Le script `start.sh` gère automatiquement:
+- ✅ Vérification de Docker
+- ✅ Construction de l'image
+- ✅ Démarrage du conteneur
+- ✅ Vérification de santé
+
+L'application sera disponible sur `http://localhost:3000`
+
+**Commandes Docker utiles:**
+```bash
+# Voir les logs
+docker-compose logs -f
+
+# Arrêter
+docker-compose down
+
+# Redémarrer
+docker-compose restart
+```
+
+### Option 2: Installation manuelle (Développement)
+
+#### 1. Installer les dépendances
 
 ```bash
 cd backend
 npm install
 ```
 
-### 2. Configurer l'API OpenAI
+#### 2. Configurer l'API OpenAI
 
 Créez un fichier `.env` à la racine du projet:
 
@@ -43,7 +78,7 @@ NODE_ENV=development
 MAX_AUDIO_SIZE_MB=25
 ```
 
-### 3. Démarrer le serveur
+#### 3. Démarrer le serveur
 
 ```bash
 cd backend
@@ -58,6 +93,16 @@ npm run dev
 
 Le serveur démarre sur `http://localhost:3000`
 
+### Option 3: Déploiement sur la Forge
+
+Consultez le guide complet: [DEPLOIEMENT-FORGE.md](DEPLOIEMENT-FORGE.md)
+
+Le projet inclut:
+- ✅ Pipeline GitLab CI/CD (`.gitlab-ci.yml`)
+- ✅ Configuration Docker (`Dockerfile`, `docker-compose.yml`)
+- ✅ Script de démarrage automatique (`start.sh`)
+- ✅ Variables d'environnement (`.env.example`)
+
 ## 📖 Utilisation
 
 ### Étape 1: Accès à l'interface
@@ -67,10 +112,7 @@ Ouvrez votre navigateur et allez sur:
 http://localhost:3000
 ```
 
-Ou ouvrez directement le fichier:
-```
-http://localhost:3000/voice-v3.html
-```
+L'interface vocale est maintenant la page d'accueil par défaut.
 
 ### Étape 2: Upload du PDF pré-rempli
 
@@ -141,9 +183,16 @@ Gevasco/
 ├── css/
 │   └── voice-styles.css          # Styles interface
 │
-├── voice-v3.html                 # Page principale
+├── index.html                    # Page principale (interface vocale)
+├── Dockerfile                    # Configuration Docker
+├── docker-compose.yml            # Orchestration Docker
+├── start.sh                      # Script démarrage automatique
+├── .gitlab-ci.yml                # Pipeline CI/CD GitLab
 ├── .env                          # Configuration (à créer)
-└── .env.example                  # Template configuration
+├── .env.example                  # Template configuration
+├── .dockerignore                 # Fichiers exclus Docker
+├── README-VOICE-V3.md            # Ce fichier
+└── DEPLOIEMENT-FORGE.md          # Guide déploiement
 ```
 
 ## 🔧 Configuration avancée
@@ -313,5 +362,5 @@ Projet éducatif - Usage libre
 ---
 
 **Version**: 3.0.0
-**Dernière mise à jour**: Janvier 2024
+**Dernière mise à jour**: Janvier 2026
 **Technologies**: Node.js, Express, OpenAI SDK, Web Audio API

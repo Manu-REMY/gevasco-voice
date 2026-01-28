@@ -26,9 +26,9 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Root route - serve voice interface
+// Root route - serve voice interface (index.html)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../voice-v3.html'));
+  res.sendFile(path.join(__dirname, '../index.html'));
 });
 
 // Error handling middleware

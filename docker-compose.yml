@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  gevasco-voice:
+    build: .
+    container_name: gevasco-voice-assistant
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MAX_AUDIO_SIZE_MB=${MAX_AUDIO_SIZE_MB:-25}
+      - VOICE_MODEL=${VOICE_MODEL:-alloy}
+      - TTS_MODEL=${TTS_MODEL:-tts-1}
+      - WHISPER_MODEL=${WHISPER_MODEL:-whisper-1}
+    volumes:
+      - ./backend/uploads:/app/backend/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - gevasco-network
+
+networks:
+  gevasco-network:
+    driver: bridge

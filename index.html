@@ -3,322 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur GEVA-Sco - Assistant de remplissage</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>GEVA-Sco Voice Assistant - V3</title>
+    <link rel="stylesheet" href="css/voice-styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
+    <div class="voice-container">
+        <!-- Header -->
+        <header class="voice-header">
             <div class="logo-section">
-                <h1>GEVA-Sco</h1>
-                <p class="subtitle">Scolarisation</p>
+                <h1>🎤 GEVA-Sco</h1>
+                <p class="subtitle">Assistant Vocal IA</p>
             </div>
-            <div class="action-buttons">
-                <button onclick="resetForm()" class="btn btn-secondary">Réinitialiser le formulaire</button>
-                <button onclick="saveData()" class="btn btn-save">Sauvegarder</button>
-                <button onclick="generatePDF()" class="btn btn-primary">Générer le PDF</button>
+            <div class="header-info">
+                <div class="api-status" id="api-status">
+                    <span class="status-dot"></span>
+                    <span class="status-label">Connexion API...</span>
+                </div>
             </div>
         </header>
 
-        <div class="form-section">
-            <h2>Éléments relatifs à un parcours de scolarisation et/ou de formation : support de recueil d'informations</h2>
-            <div class="badge">PREMIÈRE DEMANDE</div>
+        <!-- Workflow Steps -->
+        <div class="workflow-steps">
+            <div class="step active" id="step-upload">
+                <span class="step-number">1</span>
+                <span class="step-text">Upload PDF</span>
+            </div>
+            <div class="step" id="step-interview">
+                <span class="step-number">2</span>
+                <span class="step-text">Entretien vocal</span>
+            </div>
+            <div class="step" id="step-validation">
+                <span class="step-number">3</span>
+                <span class="step-text">Validation</span>
+            </div>
+        </div>
 
-            <!-- Année scolaire et date -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Pour l'année scolaire 20</label>
-                    <input type="text" id="annee1" placeholder="24" maxlength="2"> / 20
-                    <input type="text" id="annee2" placeholder="25" maxlength="2">
+        <!-- Phase 1: Upload PDF -->
+        <section id="upload-section" class="section active">
+            <div class="section-header">
+                <h2>📄 Étape 1: Importer le GEVA-Sco pré-rempli</h2>
+                <p class="section-description">Importez le PDF contenant les informations administratives (élève, parents, école)</p>
+            </div>
+
+            <div class="upload-zone" id="upload-zone">
+                <input type="file" id="pdf-input" accept=".pdf" hidden>
+                <label for="pdf-input" class="upload-label">
+                    <div class="upload-icon">📄</div>
+                    <div class="upload-text">
+                        <span class="upload-main">Cliquez ou glissez votre PDF ici</span>
+                        <span class="upload-sub">PDF GEVA-Sco pré-rempli (max 10MB)</span>
+                    </div>
+                </label>
+            </div>
+
+            <div id="extraction-result" class="extraction-result" style="display:none;">
+                <h3>✓ Données extraites du PDF</h3>
+                <div id="extracted-data" class="extracted-data"></div>
+                <div class="extraction-actions">
+                    <button id="edit-extracted-btn" class="btn btn-secondary">✏️ Corriger les données</button>
+                    <button id="start-interview-btn" class="btn btn-primary">Démarrer l'entretien vocal →</button>
                 </div>
-                <div class="form-group">
-                    <label>Date de réunion de l'équipe éducative</label>
-                    <input type="date" id="dateReunion">
+            </div>
+        </section>
+
+        <!-- Phase 2: Voice Interview -->
+        <section id="interview-section" class="section">
+            <div class="section-header">
+                <h2>🎤 Entretien vocal</h2>
+                <p class="section-description">Répondez aux questions oralement. GPT-4 enrichira vos réponses automatiquement.</p>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span class="progress-label">Question <span id="current-question-num">1</span> sur <span id="total-questions">10</span></span>
+                    <span class="progress-percent" id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
                 </div>
             </div>
 
-            <!-- IDENTIFICATION -->
-            <section class="section-card">
-                <h3>Identification</h3>
+            <!-- Question Display -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-badge">Question <span id="current-question">1</span>/10</span>
+                    <span class="question-category" id="question-category">Comportement</span>
+                </div>
+                <div class="question-text" id="question-text">
+                    Chargement de la question...
+                </div>
+                <div class="question-hint" id="question-hint"></div>
+            </div>
 
-                <div class="form-row">
-                    <div class="form-group flex-2">
-                        <label>Nom et prénom de l'élève</label>
-                        <input type="text" id="nomEleve" placeholder="NOM Prénom">
+            <!-- Voice Status Indicator -->
+            <div class="voice-status-container">
+                <div class="voice-status" id="voice-status">
+                    <div class="status-indicator" id="status-indicator">
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-dot"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Date de naissance</label>
-                        <input type="date" id="dateNaissance">
-                    </div>
+                    <p class="status-text" id="status-text">Prêt à écouter</p>
+                    <p class="status-subtext" id="status-subtext"></p>
                 </div>
+            </div>
 
-                <div class="form-row">
-                    <div class="form-group flex-2">
-                        <label>N° et rue</label>
-                        <input type="text" id="adresseEleve" placeholder="3 Lotissement Les Sylphides">
-                    </div>
+            <!-- Transcript Display -->
+            <div class="transcript-box" id="transcript-box" style="display:none;">
+                <div class="transcript-header">
+                    <span class="transcript-icon">🎤</span>
+                    <span class="transcript-title">Ce que j'ai entendu:</span>
                 </div>
+                <p id="transcript-text" class="transcript-text"></p>
+            </div>
 
-                <div class="form-row">
-                    <div class="form-group flex-2">
-                        <label>Ville</label>
-                        <input type="text" id="villeEleve" placeholder="Montfrin">
-                    </div>
-                    <div class="form-group">
-                        <label>Code postal</label>
-                        <input type="text" id="codePostalEleve" placeholder="30490">
-                    </div>
+            <!-- Voice Controls -->
+            <div class="voice-controls">
+                <button id="start-recording-btn" class="btn btn-record">
+                    <span class="btn-icon">🎤</span>
+                    <span>Commencer à parler</span>
+                </button>
+                <button id="stop-recording-btn" class="btn btn-stop" disabled style="display:none;">
+                    <span class="btn-icon">⏹</span>
+                    <span>Arrêter</span>
+                </button>
+                <button id="repeat-question-btn" class="btn btn-secondary">
+                    <span class="btn-icon">🔁</span>
+                    <span>Répéter la question</span>
+                </button>
+            </div>
+
+            <!-- Enriched Response Preview -->
+            <div class="enriched-preview" id="enriched-preview" style="display:none;">
+                <div class="enriched-header">
+                    <span class="enriched-icon">✨</span>
+                    <h4>Texte structuré par l'IA:</h4>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Tél.</label>
-                        <input type="tel" id="telEleve">
-                    </div>
-                    <div class="form-group flex-2">
-                        <label>Courriel</label>
-                        <input type="email" id="emailEleve">
-                    </div>
+                <div class="enriched-text" id="enriched-text"></div>
+                <div class="enriched-meta" id="enriched-meta"></div>
+                <div class="confirmation-buttons">
+                    <button id="confirm-response-btn" class="btn btn-success">
+                        <span class="btn-icon">✓</span>
+                        <span>Valider et continuer</span>
+                    </button>
+                    <button id="retry-response-btn" class="btn btn-warning">
+                        <span class="btn-icon">↻</span>
+                        <span>Reformuler</span>
+                    </button>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- COORDONNÉES DES REPRÉSENTANTS LÉGAUX -->
-            <section class="section-card">
-                <h3>Coordonnées des représentants légaux</h3>
+        <!-- Phase 3: Validation -->
+        <section id="validation-section" class="section">
+            <div class="section-header">
+                <h2>✅ Validation finale</h2>
+                <p class="section-description">Vérifiez le résumé avant de générer le PDF final</p>
+            </div>
 
-                <div class="parents-grid">
-                    <!-- Parent 1 -->
-                    <div class="parent-section">
-                        <h4>Parents - Parent 1</h4>
-                        <div class="form-group">
-                            <label>
-                                <input type="radio" name="civiliteP1" value="Mme" checked> Mme
-                                <input type="radio" name="civiliteP1" value="M"> M.
-                            </label>
-                            <input type="text" id="nomP1" placeholder="PAYEN Lydie">
-                        </div>
-                        <div class="form-group">
-                            <label>N° et rue</label>
-                            <input type="text" id="adresseP1">
-                        </div>
-                        <div class="form-group">
-                            <label>CP</label>
-                            <input type="text" id="cpP1">
-                        </div>
-                        <div class="form-group">
-                            <label>Ville</label>
-                            <input type="text" id="villeP1">
-                        </div>
-                        <div class="form-group">
-                            <label>Tél.</label>
-                            <input type="tel" id="telP1" placeholder="06 61 54 89 10">
-                        </div>
-                        <div class="form-group">
-                            <label>Courriel</label>
-                            <input type="email" id="emailP1" placeholder="lydiejf@hotmail.com">
-                        </div>
-                    </div>
-
-                    <!-- Parent 2 -->
-                    <div class="parent-section">
-                        <h4>Parents - Parent 2</h4>
-                        <div class="form-group">
-                            <label>
-                                <input type="radio" name="civiliteP2" value="Mme"> Mme
-                                <input type="radio" name="civiliteP2" value="M" checked> M.
-                            </label>
-                            <input type="text" id="nomP2" placeholder="RICHARTE Jean-François">
-                        </div>
-                        <div class="form-group">
-                            <label>N° et rue</label>
-                            <input type="text" id="adresseP2">
-                        </div>
-                        <div class="form-group">
-                            <label>CP</label>
-                            <input type="text" id="cpP2">
-                        </div>
-                        <div class="form-group">
-                            <label>Ville</label>
-                            <input type="text" id="villeP2">
-                        </div>
-                        <div class="form-group">
-                            <label>Tél.</label>
-                            <input type="tel" id="telP2" placeholder="06 61 55 34 17">
-                        </div>
-                        <div class="form-group">
-                            <label>Courriel</label>
-                            <input type="email" id="emailP2" placeholder="jfr-30@hotmail.fr">
-                        </div>
-                    </div>
-
-                    <!-- Autre responsable légal -->
-                    <div class="parent-section">
-                        <h4>Autre responsable légal</h4>
-                        <div class="form-group">
-                            <label>
-                                <input type="radio" name="civiliteP3" value="Mme"> Mme
-                                <input type="radio" name="civiliteP3" value="M"> M.
-                            </label>
-                            <input type="text" id="nomP3">
-                        </div>
-                        <div class="form-group">
-                            <label>N° et rue</label>
-                            <input type="text" id="adresseP3">
-                        </div>
-                        <div class="form-group">
-                            <label>CP</label>
-                            <input type="text" id="cpP3">
-                        </div>
-                        <div class="form-group">
-                            <label>Ville</label>
-                            <input type="text" id="villeP3">
-                        </div>
-                        <div class="form-group">
-                            <label>Tél.</label>
-                            <input type="tel" id="telP3">
-                        </div>
-                        <div class="form-group">
-                            <label>Courriel</label>
-                            <input type="email" id="emailP3">
-                        </div>
-                    </div>
+            <div class="summary-card">
+                <h3>📝 Résumé de l'entretien</h3>
+                <div id="summary-text" class="summary-text">
+                    Génération du résumé en cours...
                 </div>
-            </section>
+            </div>
 
-            <!-- POINTS SAILLANTS LIÉS À LA SCOLARISATION -->
-            <section class="section-card">
-                <h3>Points saillants liés à la scolarisation</h3>
+            <div class="validation-controls">
+                <button id="read-summary-btn" class="btn btn-secondary">
+                    <span class="btn-icon">🔊</span>
+                    <span>Lire le résumé à voix haute</span>
+                </button>
+                <button id="edit-response-btn" class="btn btn-secondary">
+                    <span class="btn-icon">✏️</span>
+                    <span>Modifier une réponse</span>
+                </button>
+                <button id="generate-pdf-btn" class="btn btn-primary btn-large">
+                    <span class="btn-icon">📄</span>
+                    <span>Générer le PDF final</span>
+                </button>
+            </div>
+        </section>
 
-                <div class="form-group">
-                    <label>Nom et coordonnées de l'enseignant référent du secteur</label>
-                    <input type="text" id="enseignantReferent" placeholder="Corine MARTINEZ - cdg Claudie Haigneré - Av. de Provence - 30650 Rochefort-du-Gard">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Tél.</label>
-                        <input type="tel" id="telEnseignant" placeholder="06 11 53 80 23">
-                    </div>
-                    <div class="form-group flex-2">
-                        <label>Courriel</label>
-                        <input type="email" id="emailEnseignant" placeholder="corine.martinez@ac-montpellier.fr">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group flex-2">
-                        <label>Établissement scolaire fréquenté</label>
-                        <input type="text" id="etablissement" placeholder="EE Amand Peyrot">
-                    </div>
-                    <div class="form-group">
-                        <label>Classe fréquentée</label>
-                        <input type="text" id="classe" placeholder="CP">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>N° et rue</label>
-                    <input type="text" id="adresseEtablissement" placeholder="25 avenue du Dr Félix Clément">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group flex-2">
-                        <label>Ville</label>
-                        <input type="text" id="villeEtablissement" placeholder="Montfrin">
-                    </div>
-                    <div class="form-group">
-                        <label>Code postal</label>
-                        <input type="text" id="codePostalEtablissement" placeholder="30490">
-                    </div>
-                </div>
-
-                <h4>Parcours de scolarisation</h4>
-                <div id="parcoursContainer">
-                    <div class="parcours-row">
-                        <div class="form-group">
-                            <label>Années</label>
-                            <input type="text" class="parcours-annee" placeholder="2023-2024">
-                        </div>
-                        <div class="form-group flex-3">
-                            <label>Scolarisation</label>
-                            <input type="text" class="parcours-scolarisation" placeholder="GS école mat Sueanne Crémieux Montfrin">
-                        </div>
-                        <button type="button" onclick="removeParcours(this)" class="btn-remove">✕</button>
-                    </div>
-                    <div class="parcours-row">
-                        <div class="form-group">
-                            <label>Années</label>
-                            <input type="text" class="parcours-annee" placeholder="2024-2025">
-                        </div>
-                        <div class="form-group flex-3">
-                            <label>Scolarisation</label>
-                            <input type="text" class="parcours-scolarisation" placeholder="CP EE Amand Peyrot Montfrin">
-                        </div>
-                        <button type="button" onclick="removeParcours(this)" class="btn-remove">✕</button>
-                    </div>
-                </div>
-                <button type="button" onclick="addParcours()" class="btn btn-secondary">+ Ajouter une année</button>
-            </section>
-
-            <!-- OBSERVATIONS PÉDAGOGIQUES -->
-            <section class="section-card">
-                <h3>Observations pédagogiques et éducatives</h3>
-
-                <div class="suggestions-area">
-                    <h4>💡 Suggestions de phrases (cliquez pour insérer)</h4>
-                    <div id="suggestionsCP" class="suggestions-buttons"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>Comportement et vie en classe</label>
-                    <textarea id="comportement" rows="4" placeholder="Décrivez le comportement de l'élève en classe..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Apprentissages - Français</label>
-                    <textarea id="francais" rows="4" placeholder="Niveau en français, lecture, écriture..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Apprentissages - Mathématiques</label>
-                    <textarea id="mathematiques" rows="4" placeholder="Niveau en mathématiques, numération, calcul..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Autonomie et compétences sociales</label>
-                    <textarea id="autonomie" rows="4" placeholder="Niveau d'autonomie, relations avec les pairs..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Besoins identifiés</label>
-                    <textarea id="besoins" rows="4" placeholder="Quels sont les besoins spécifiques de l'élève?"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Aménagements et adaptations proposés</label>
-                    <textarea id="amenagements" rows="4" placeholder="Quels aménagements proposez-vous?"></textarea>
-                </div>
-            </section>
-
-            <!-- SYNTHÈSE -->
-            <section class="section-card">
-                <h3>Synthèse et propositions</h3>
-
-                <div class="form-group">
-                    <label>Synthèse générale</label>
-                    <textarea id="synthese" rows="6" placeholder="Synthèse générale de la situation de l'élève..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Propositions pour le parcours de scolarisation</label>
-                    <textarea id="propositions" rows="6" placeholder="Vos propositions pour la suite du parcours..."></textarea>
-                </div>
-            </section>
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loading-overlay" style="display:none;">
+            <div class="loading-spinner"></div>
+            <p class="loading-text" id="loading-text">Traitement en cours...</p>
         </div>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container" class="toast-container"></div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/phrases-cp.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/pdf-generator.js"></script>
+    <script src="js/voice-session.js"></script>
+    <script src="js/voice-api-client.js"></script>
+    <script src="js/voice-ui.js"></script>
+    <script src="js/voice-orchestrator.js"></script>
 </body>
 </html>
