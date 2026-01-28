@@ -47,7 +47,7 @@ verify_setup:
     - ls -la
     - test -f "backend/server.js" || (echo "❌ backend/server.js manquant" && exit 1)
     - test -f "backend/package.json" || (echo "❌ backend/package.json manquant" && exit 1)
-    - test -f "voice-v3.html" || (echo "❌ voice-v3.html manquant" && exit 1)
+    - test -f "index.html" || (echo "❌ index.html manquant" && exit 1)
     - echo "✅ Structure du projet validée"
   only:
     - main
@@ -105,7 +105,6 @@ build_project:
   artifacts:
     paths:
       - backend/
-      - voice-v3.html
       - index.html
       - js/
       - css/
