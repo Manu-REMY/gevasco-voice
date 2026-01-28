@@ -2,9 +2,17 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const whisperService = require('../services/whisper.service');
 const gptService = require('../services/gpt.service');
 const ttsService = require('../services/tts.service');
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, '../uploads/');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log('Created uploads directory:', uploadsDir);
+}
 
 // Map MIME types to file extensions for Whisper API
 const mimeToExt = {
