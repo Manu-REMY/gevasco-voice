@@ -142,7 +142,7 @@ Ajoutez:
 
 ## 🔄 Pipeline CI/CD
 
-Le projet utilise `.gitlab-ci.yml` avec 4 stages:
+Le projet utilise `.gitlab-ci.yml` avec 5 stages:
 
 ### 1. Install (stage: install)
 - Installation des dépendances backend
@@ -154,10 +154,14 @@ Le projet utilise `.gitlab-ci.yml` avec 4 stages:
 
 ### 3. Build (stage: build)
 - Construction de l'image Docker
-- Génération des artifacts pour déploiement
+- Publication vers le GitLab Container Registry
 
-### 4. Deploy (stage: deploy)
-- Déploiement GitLab Pages (interface statique)
+### 4. Publish (stage: publish)
+- Push de l'image vers le Container Registry
+- Tags: `latest` et `commit-sha`
+
+### 5. Deploy (stage: deploy)
+- Instructions de déploiement affichées
 - Notification de succès
 
 ### Déclencher manuellement le pipeline
@@ -166,6 +170,72 @@ Dans GitLab:
 1. Allez dans **CI/CD → Pipelines**
 2. Cliquez sur **Run pipeline**
 3. Sélectionnez la branche `main` ou `develop`
+
+---
+
+## 🐳 Déploiement depuis le Container Registry
+
+Après le succès du pipeline, l'image Docker est disponible dans le Container Registry GitLab.
+
+### 1. Se connecter au Container Registry
+
+```bash
+# Remplacez par l'URL de votre Forge
+docker login registry.forge-edu.fr
+# Utilisez votre identifiant GitLab et un Personal Access Token avec scope "read_registry"
+```
+
+### 2. Télécharger l'image
+
+```bash
+# Remplacez par le chemin de votre projet
+docker pull registry.forge-edu.fr/votre-groupe/gevasco/gevasco-voice:latest
+```
+
+### 3. Lancer le conteneur
+
+```bash
+docker run -d \
+  --name gevasco-voice \
+  -p 3000:3000 \
+  -e OPENAI_API_KEY=sk-proj-VOTRE_CLE_API \
+  --restart unless-stopped \
+  registry.forge-edu.fr/votre-groupe/gevasco/gevasco-voice:latest
+```
+
+### 4. Vérifier le déploiement
+
+```bash
+# Vérifier que le conteneur est en cours d'exécution
+docker ps | grep gevasco
+
+# Vérifier les logs
+docker logs -f gevasco-voice
+
+# Tester l'API
+curl http://localhost:3000/api/health
+```
+
+### Mise à jour automatique
+
+Pour mettre à jour vers la dernière version:
+
+```bash
+# Arrêter et supprimer l'ancien conteneur
+docker stop gevasco-voice
+docker rm gevasco-voice
+
+# Télécharger la nouvelle image
+docker pull registry.forge-edu.fr/votre-groupe/gevasco/gevasco-voice:latest
+
+# Relancer
+docker run -d \
+  --name gevasco-voice \
+  -p 3000:3000 \
+  -e OPENAI_API_KEY=sk-proj-VOTRE_CLE_API \
+  --restart unless-stopped \
+  registry.forge-edu.fr/votre-groupe/gevasco/gevasco-voice:latest
+```
 
 ---
 

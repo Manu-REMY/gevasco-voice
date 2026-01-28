@@ -1,16 +1,19 @@
 # Configuration CI/CD pour GEVA-Sco Voice Assistant V3
-# Forge Edu - GitLab CI
+# Forge Edu - GitLab CI avec déploiement Docker
 
 stages:
   - install
   - test
   - build
+  - publish
   - deploy
 
 variables:
   NODE_VERSION: "18"
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: "/certs"
+  # Nom de l'image pour le Container Registry
+  DOCKER_IMAGE: $CI_REGISTRY_IMAGE/gevasco-voice
 
 # Cache pour accélérer les builds
 cache:
@@ -48,6 +51,7 @@ verify_setup:
     - test -f "backend/server.js" || (echo "❌ backend/server.js manquant" && exit 1)
     - test -f "backend/package.json" || (echo "❌ backend/package.json manquant" && exit 1)
     - test -f "index.html" || (echo "❌ index.html manquant" && exit 1)
+    - test -f "Dockerfile" || (echo "❌ Dockerfile manquant" && exit 1)
     - echo "✅ Structure du projet validée"
   only:
     - main
@@ -71,26 +75,30 @@ lint_check:
     - develop
     - merge_requests
 
-# Build Docker Image (optionnel - nécessite Docker-in-Docker)
-build_docker:
+# Build et publication de l'image Docker vers le Container Registry
+build_and_push_docker:
   stage: build
   image: docker:24-dind
   services:
     - docker:24-dind
   before_script:
     - docker info
+    - echo "🔐 Connexion au Container Registry..."
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
     - echo "🐳 Construction de l'image Docker GEVA-Sco Voice V3..."
-    - docker build -t gevasco-voice:${CI_COMMIT_SHORT_SHA} .
-    - docker build -t gevasco-voice:latest .
-    - echo "✅ Image Docker construite avec succès"
-    - docker images | grep gevasco-voice
-  allow_failure: true
+    - docker build -t $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker build -t $DOCKER_IMAGE:latest .
+    - echo "📤 Publication vers le Container Registry..."
+    - docker push $DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push $DOCKER_IMAGE:latest
+    - echo "✅ Image Docker publiée avec succès"
+    - echo "📦 Image: $DOCKER_IMAGE:latest"
   only:
     - main
     - develop
 
-# Build (optionnel, pour validation)
+# Build de validation (sans Docker)
 build_project:
   stage: build
   image: node:${NODE_VERSION}
@@ -118,20 +126,40 @@ build_project:
     - main
     - develop
 
-# Pages GitLab désactivé - L'application nécessite un backend Node.js
-# Pour déployer : utilisez Docker (voir DEPLOIEMENT-FORGE.md)
-# pages:
-#   stage: deploy
-#   ...
-
-# Notification de succès
-success_notification:
+# Notification de succès avec instructions de déploiement
+deploy_instructions:
   stage: deploy
   image: alpine:latest
   script:
     - echo "🎉 Pipeline exécuté avec succès!"
     - echo "✅ GEVA-Sco Voice Assistant V3 - Build OK"
     - echo "📦 Version 3.0.0"
+    - echo ""
+    - echo "=========================================="
+    - echo "🐳 INSTRUCTIONS DE DÉPLOIEMENT"
+    - echo "=========================================="
+    - echo ""
+    - echo "L'image Docker est disponible dans le Container Registry:"
+    - echo "  $DOCKER_IMAGE:latest"
+    - echo ""
+    - echo "Pour exécuter l'application sur un serveur:"
+    - echo ""
+    - echo "1. Se connecter au Registry:"
+    - echo "   docker login $CI_REGISTRY"
+    - echo ""
+    - echo "2. Télécharger l'image:"
+    - echo "   docker pull $DOCKER_IMAGE:latest"
+    - echo ""
+    - echo "3. Lancer le conteneur:"
+    - echo "   docker run -d -p 3000:3000 \\"
+    - echo "     -e OPENAI_API_KEY=votre_clé \\"
+    - echo "     --name gevasco-voice \\"
+    - echo "     $DOCKER_IMAGE:latest"
+    - echo ""
+    - echo "4. Accéder à l'application:"
+    - echo "   http://localhost:3000"
+    - echo ""
+    - echo "=========================================="
   when: on_success
   only:
     - main
