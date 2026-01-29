@@ -1,12 +1,20 @@
-const OpenAI = require('openai');
 const fs = require('fs');
+const { getSTTProvider } = require('./ai-providers');
 
 class WhisperService {
   constructor() {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY not configured');
+    // Provider will be resolved at runtime
+    this.provider = null;
+  }
+
+  /**
+   * Get the STT provider (lazy initialization)
+   */
+  _getProvider() {
+    if (!this.provider) {
+      this.provider = getSTTProvider();
     }
-    this.client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    return this.provider;
   }
 
   async transcribe(audioFilePath) {
@@ -17,14 +25,9 @@ class WhisperService {
       const stats = fs.statSync(audioFilePath);
       console.log('Audio file size:', stats.size, 'bytes');
 
-      const audioFile = fs.createReadStream(audioFilePath);
-
-      const response = await this.client.audio.transcriptions.create({
-        file: audioFile,
-        model: 'whisper-1',
-        language: 'fr',
-        response_format: 'verbose_json',
-        timestamp_granularities: ['word']
+      const provider = this._getProvider();
+      const result = await provider.transcribe(audioFilePath, {
+        language: 'fr'
       });
 
       console.log('Transcription successful');
@@ -37,17 +40,14 @@ class WhisperService {
       }
 
       return {
-        text: response.text,
-        duration: response.duration,
-        language: response.language,
-        words: response.words || []
+        text: result.text,
+        duration: result.duration,
+        language: result.language,
+        words: result.words || []
       };
     } catch (error) {
-      console.error('Whisper API error details:', {
-        message: error.message,
-        type: error.type,
-        status: error.status,
-        code: error.code
+      console.error('STT error details:', {
+        message: error.message
       });
 
       // Cleanup on error
@@ -56,7 +56,7 @@ class WhisperService {
       } catch (cleanupError) {
         // Ignore cleanup errors
       }
-      throw new Error(`Whisper transcription failed: ${error.message}`);
+      throw new Error(`Transcription failed: ${error.message}`);
     }
   }
 }

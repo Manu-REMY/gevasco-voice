@@ -8,6 +8,45 @@
 </head>
 <body>
     <div class="voice-container">
+        <!-- API Key Setup Modal -->
+        <div id="api-key-modal" class="modal" style="display:none;">
+            <div class="modal-content api-key-setup">
+                <div class="modal-header">
+                    <h2>🔑 Configuration requise</h2>
+                    <p>Entrez votre clé API OpenAI pour utiliser l'application</p>
+                </div>
+                <div class="modal-body">
+                    <div class="api-key-form">
+                        <label for="api-key-input">Clé API OpenAI</label>
+                        <div class="input-group">
+                            <input
+                                type="password"
+                                id="api-key-input"
+                                placeholder="sk-..."
+                                autocomplete="off"
+                            >
+                            <button type="button" id="toggle-key-visibility" class="btn-icon-only">
+                                👁
+                            </button>
+                        </div>
+                        <p class="input-hint">
+                            Obtenez votre clé sur <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>
+                        </p>
+                    </div>
+                    <div id="api-key-error" class="error-message" style="display:none;"></div>
+                    <div id="api-key-success" class="success-message" style="display:none;">
+                        ✓ Clé API validée avec succès !
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="validate-api-key-btn" class="btn btn-primary">
+                        <span class="btn-icon">✓</span>
+                        <span>Valider la clé</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Header -->
         <header class="voice-header">
             <div class="logo-section">
@@ -15,6 +54,9 @@
                 <p class="subtitle">Assistant Vocal IA</p>
             </div>
             <div class="header-info">
+                <button id="change-api-key-btn" class="btn-link" title="Changer la clé API">
+                    🔑
+                </button>
                 <div class="api-status" id="api-status">
                     <span class="status-dot"></span>
                     <span class="status-label">Connexion API...</span>
@@ -195,6 +237,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="js/api-key-manager.js"></script>
     <script src="js/phrases-cp.js"></script>
     <script src="js/voice-session.js"></script>
     <script src="js/voice-api-client.js"></script>

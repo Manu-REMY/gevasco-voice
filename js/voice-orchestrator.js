@@ -25,13 +25,21 @@ class VoiceOrchestrator {
    * Initialize the orchestrator
    */
   async init() {
-    // Check API connection
-    const isConnected = await this.apiClient.checkHealth();
-    this.ui.updateAPIStatus(isConnected);
+    // Initialize API Key Manager
+    apiKeyManager.init();
 
-    if (!isConnected) {
-      this.ui.showError('Impossible de se connecter au serveur. Assurez-vous que le backend est démarré.');
+    // Check API key first
+    const hasValidApiKey = await apiKeyManager.checkAPIKeyStatus();
+
+    if (!hasValidApiKey) {
+      // Show API key modal
+      apiKeyManager.showModal();
+      this.ui.updateAPIStatus(false);
+      return;
     }
+
+    // Check API connection
+    await this.checkAPIConnection();
 
     // Try to load saved session
     if (this.session.loadFromLocalStorage()) {
@@ -43,6 +51,20 @@ class VoiceOrchestrator {
 
     // Show upload section
     this.ui.showSection('upload');
+  }
+
+  /**
+   * Check API connection status
+   */
+  async checkAPIConnection() {
+    const isConnected = await this.apiClient.checkHealth();
+    this.ui.updateAPIStatus(isConnected);
+
+    if (!isConnected) {
+      this.ui.showError('Impossible de se connecter au serveur. Assurez-vous que le backend est démarré.');
+    }
+
+    return isConnected;
   }
 
   /**

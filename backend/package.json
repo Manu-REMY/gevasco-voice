@@ -1,7 +1,7 @@
 {
   "name": "gevasco-voice-backend",
-  "version": "3.0.0",
-  "description": "Backend API pour GEVA-Sco Voice Interface avec OpenAI",
+  "version": "4.0.0",
+  "description": "Backend API pour GEVA-Sco Voice Interface - Multi-provider AI (OpenAI, Mistral, Claude, Albert)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,12 +11,20 @@
   "keywords": [
     "geva-sco",
     "openai",
+    "mistral",
+    "claude",
+    "anthropic",
+    "albert",
     "whisper",
     "voice",
-    "education"
+    "education",
+    "multi-provider"
   ],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

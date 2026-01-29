@@ -1,15 +1,23 @@
-const OpenAI = require('openai');
 const path = require('path');
+const { getChatProvider } = require('./ai-providers');
 
 // Load phrases library
 const phrasesCP = require(path.join(__dirname, '../../js/phrases-cp.js'));
 
 class GPTService {
   constructor() {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY not configured');
+    // Provider will be resolved at runtime
+    this.provider = null;
+  }
+
+  /**
+   * Get the chat provider (lazy initialization)
+   */
+  _getProvider() {
+    if (!this.provider) {
+      this.provider = getChatProvider();
     }
-    this.client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    return this.provider;
   }
 
   async enrichResponse(transcript, questionContext, existingData) {
@@ -61,21 +69,18 @@ RETOURNE EXACTEMENT AU FORMAT JSON (pas de texte avant ou après):
   "needsConfirmation": false
 }`;
 
-      const response = await this.client.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        response_format: { type: 'json_object' },
+      const provider = this._getProvider();
+      const result = await provider.chatCompletionJSON([
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ], {
         temperature: 0.3
       });
 
-      const result = JSON.parse(response.choices[0].message.content);
       return result;
 
     } catch (error) {
-      throw new Error(`GPT-4 enrichment failed: ${error.message}`);
+      throw new Error(`Text enrichment failed: ${error.message}`);
     }
   }
 
@@ -95,17 +100,16 @@ Le résumé doit:
 
 Format: Paragraphe naturel destiné à la synthèse vocale, avec des transitions claires entre les sections.`;
 
-      const response = await this.client.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
+      const provider = this._getProvider();
+      const result = await provider.chatCompletion([
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ], {
         temperature: 0.5,
-        max_tokens: 1000
+        maxTokens: 1000
       });
 
-      return response.choices[0].message.content;
+      return result.content;
 
     } catch (error) {
       throw new Error(`Summary generation failed: ${error.message}`);
