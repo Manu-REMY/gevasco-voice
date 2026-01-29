@@ -16,7 +16,7 @@ class TTSService {
     return this.provider;
   }
 
-  async synthesize(text, voice = 'nova', speed = 1.10) {
+  async synthesize(text, voice = 'nova', speed = 1.20) {
     try {
       const provider = this._getProvider();
       // Available voices for OpenAI: alloy, echo, fable, onyx, nova, shimmer

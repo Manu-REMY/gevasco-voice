@@ -137,7 +137,7 @@ class OpenAIProvider extends BaseProvider {
     const {
       model = process.env.OPENAI_TTS_MODEL || 'tts-1',
       voice = process.env.OPENAI_TTS_VOICE || 'nova',
-      speed = 1.10
+      speed = 1.20
     } = options;
 
     try {
