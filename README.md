@@ -159,14 +159,12 @@ Les phrases de la bibliothèque utilisent:
 
 #### Choix du mode de reconnaissance vocale
 
-L'application propose **deux modes de reconnaissance vocale** pour répondre aux exigences de confidentialité :
+L'application propose **deux modes de reconnaissance vocale** :
 
-<img src="screenshots/Local-distant.png" alt="Toggle Local/Distant" width="400">
-
-| Mode | Description | Destinataire audio | Qualité |
-|------|-------------|-------------------|---------|
-| 🌐 **Navigateur** | Utilise la Web Speech API du navigateur | Google (Chrome/Edge) ou Apple (Safari) | ⭐⭐⭐ |
-| ☁️ **Distant (OpenAI)** | Utilise l'API Whisper d'OpenAI | OpenAI | ⭐⭐⭐⭐⭐ |
+| Mode | Capture | Destinataire audio | Qualité |
+|------|---------|-------------------|---------|
+| 🌐 **Navigateur** | <img src="screenshots/Local.png" alt="Mode Navigateur" width="280"> | Google (Chrome/Edge) ou Apple (Safari) | ⭐⭐⭐ |
+| ☁️ **Distant (OpenAI)** | <img src="screenshots/Distant.png" alt="Mode Distant" width="280"> | OpenAI | ⭐⭐⭐⭐⭐ |
 
 **Par défaut, le mode navigateur est activé.** L'audio ne transite pas par notre serveur applicatif, mais est traité par le service de reconnaissance vocale intégré à votre navigateur.
 
