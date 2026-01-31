@@ -45,7 +45,7 @@
                         </div>
 
                         <div class="stt-toggle-container">
-                            <span class="stt-option stt-option-local active">🔒 Local (navigateur)</span>
+                            <span class="stt-option stt-option-local active">🌐 Navigateur (Google)</span>
                             <label class="toggle-switch">
                                 <input type="checkbox" id="stt-mode-toggle">
                                 <span class="toggle-slider"></span>
@@ -56,16 +56,16 @@
                         <div id="stt-warning-box" class="stt-warning hidden">
                             <span class="warning-icon">⚠️</span>
                             <div class="warning-content">
-                                <strong>Attention — Données vocales transmises</strong>
-                                <p>En mode distant, vos enregistrements audio sont envoyés aux serveurs OpenAI pour transcription. Choisissez le mode local si vous souhaitez que la voix reste sur votre appareil.</p>
+                                <strong>Audio envoyé à OpenAI</strong>
+                                <p>Vos enregistrements audio transitent par notre serveur puis sont envoyés à OpenAI Whisper pour transcription. Meilleure qualité mais plus de destinataires.</p>
                             </div>
                         </div>
 
                         <div id="stt-info-local" class="stt-info">
                             <span class="info-icon">ℹ️</span>
                             <div class="info-content">
-                                <strong>Mode local activé</strong>
-                                <p>La reconnaissance vocale utilise votre navigateur. Aucune donnée audio n'est envoyée à un serveur externe.</p>
+                                <strong>Audio envoyé à Google</strong>
+                                <p>La reconnaissance vocale utilise l'API de votre navigateur. L'audio est envoyé à Google (Chrome/Edge) sans transiter par notre serveur.</p>
                             </div>
                         </div>
                     </div>

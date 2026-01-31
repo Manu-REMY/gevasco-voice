@@ -163,31 +163,34 @@ L'application propose **deux modes de reconnaissance vocale** pour répondre aux
 
 <img src="screenshots/Local-distant.png" alt="Toggle Local/Distant" width="400">
 
-| Mode | Description | Confidentialité | Qualité |
-|------|-------------|-----------------|---------|
-| 🔒 **Local (navigateur)** | Utilise la Web Speech API du navigateur | ✅ Aucune donnée vocale transmise | ⭐⭐⭐ |
-| ☁️ **Distant (OpenAI)** | Utilise l'API Whisper d'OpenAI | ⚠️ Audio envoyé aux serveurs OpenAI | ⭐⭐⭐⭐⭐ |
+| Mode | Description | Destinataire audio | Qualité |
+|------|-------------|-------------------|---------|
+| 🌐 **Navigateur** | Utilise la Web Speech API du navigateur | Google (Chrome/Edge) ou Apple (Safari) | ⭐⭐⭐ |
+| ☁️ **Distant (OpenAI)** | Utilise l'API Whisper d'OpenAI | OpenAI | ⭐⭐⭐⭐⭐ |
 
-**Par défaut, le mode local est activé** pour garantir la confidentialité maximale. Vous pouvez basculer en mode distant si vous avez besoin d'une meilleure qualité de transcription.
+**Par défaut, le mode navigateur est activé.** L'audio ne transite pas par notre serveur applicatif, mais est traité par le service de reconnaissance vocale intégré à votre navigateur.
 
-#### Compatibilité navigateurs (mode local)
+> ⚠️ **Important** : En mode "Navigateur", Chrome et Edge envoient l'audio aux serveurs Google pour la reconnaissance vocale. Safari utilise les serveurs Apple. **Aucun des deux modes n'est véritablement "local"** - la différence réside dans le choix du prestataire (Google/Apple vs OpenAI).
 
-| Navigateur | Support | Notes |
-|------------|---------|-------|
-| **Chrome** | ✅ Complet | Recommandé |
-| **Edge** | ✅ Complet | Basé sur Chromium |
-| **Safari** | ⚠️ Partiel | iOS 14.5+ / macOS Big Sur+ |
-| **Firefox** | ❌ Non supporté | Désactivé par défaut |
-| **Opera** | ✅ Complet | Basé sur Chromium |
+#### Compatibilité navigateurs (mode navigateur)
 
-> **Note** : Si votre navigateur ne supporte pas le mode local, l'application bascule automatiquement en mode distant.
+| Navigateur | Support | Destinataire des données |
+|------------|---------|-------------------------|
+| **Chrome** | ✅ Complet | Google |
+| **Edge** | ✅ Complet | Google (via Chromium) |
+| **Safari** | ⚠️ Partiel | Apple |
+| **Firefox** | ❌ Non supporté | - |
+| **Opera** | ✅ Complet | Google (via Chromium) |
+
+> **Note** : Si votre navigateur ne supporte pas le mode navigateur, l'application bascule automatiquement en mode distant (OpenAI).
 
 #### Données transmises selon le mode
 
-| Fonction | Mode Local | Mode Distant |
-|----------|-----------|--------------|
-| Transcription (STT) | Aucune donnée transmise | Fichier audio envoyé à OpenAI Whisper |
+| Fonction | Mode Navigateur | Mode Distant |
+|----------|----------------|--------------|
+| Transcription (STT) | Audio envoyé à Google/Apple | Audio envoyé à OpenAI |
 | Enrichissement | Texte transcrit + contexte | Texte transcrit + contexte (identique) |
+| Transit serveur applicatif | ❌ Non | ✅ Oui |
 
 **Données potentiellement concernées :**
 - Nom et informations de l'élève mentionnés oralement => ne jamais mentionner d'informations d'identité de l'élève lors de l'entretien vocal

@@ -378,7 +378,7 @@ class VoiceOrchestrator {
 
       this.speechRecognition.start();
       this.ui.startRecordingAnimation();
-      this.ui.setStatus('recording', 'Je vous écoute...', '🔒 Mode local - Voix non transmise');
+      this.ui.setStatus('recording', 'Je vous écoute...', '🌐 Mode navigateur - Audio traité par Google');
 
     } catch (error) {
       console.error('Local recording error:', error);
