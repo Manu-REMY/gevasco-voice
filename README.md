@@ -163,10 +163,10 @@ L'application propose **deux modes de reconnaissance vocale** pour répondre aux
 
 <img src="screenshots/Local-distant.png" alt="Toggle Local/Distant" width="400">
 
-| Mode | Description | Confidentialité |
-|------|-------------|-----------------|
-| 🔒 **Local (navigateur)** | Utilise la Web Speech API du navigateur | ✅ Aucune donnée vocale transmise |
-| ☁️ **Distant (OpenAI)** | Utilise l'API Whisper d'OpenAI | ⚠️ Audio envoyé aux serveurs OpenAI |
+| Mode | Description | Confidentialité | Qualité |
+|------|-------------|-----------------|---------|
+| 🔒 **Local (navigateur)** | Utilise la Web Speech API du navigateur | ✅ Aucune donnée vocale transmise | ⭐⭐⭐ |
+| ☁️ **Distant (OpenAI)** | Utilise l'API Whisper d'OpenAI | ⚠️ Audio envoyé aux serveurs OpenAI | ⭐⭐⭐⭐⭐ |
 
 **Par défaut, le mode local est activé** pour garantir la confidentialité maximale. Vous pouvez basculer en mode distant si vous avez besoin d'une meilleure qualité de transcription.
 
