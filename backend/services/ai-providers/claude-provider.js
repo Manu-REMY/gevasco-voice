@@ -48,7 +48,7 @@ class ClaudeProvider extends BaseProvider {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'x-api-key': this.apiKey,
         'anthropic-version': this.apiVersion
       },
@@ -99,7 +99,7 @@ class ClaudeProvider extends BaseProvider {
       const response = await this._request('/v1/messages', requestBody);
 
       return {
-        content: response.content[0].text,
+        content: this.normalizeUTF8(response.content[0].text),
         usage: {
           prompt_tokens: response.usage?.input_tokens,
           completion_tokens: response.usage?.output_tokens,
@@ -162,7 +162,7 @@ class ClaudeProvider extends BaseProvider {
       }
 
       const response = await this._request('/v1/messages', requestBody);
-      const content = response.content[0].text;
+      const content = this.normalizeUTF8(response.content[0].text);
 
       // Try to parse JSON, handle potential markdown code blocks
       let jsonContent = content;

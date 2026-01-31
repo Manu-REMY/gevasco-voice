@@ -24,7 +24,7 @@ class MistralProvider extends BaseProvider {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'Authorization': `Bearer ${this.apiKey}`
       },
       body: JSON.stringify(body)
@@ -61,7 +61,7 @@ class MistralProvider extends BaseProvider {
       });
 
       return {
-        content: response.choices[0].message.content,
+        content: this.normalizeUTF8(response.choices[0].message.content),
         usage: response.usage
       };
     } catch (error) {
@@ -104,7 +104,7 @@ class MistralProvider extends BaseProvider {
         response_format: { type: 'json_object' }
       });
 
-      const content = response.choices[0].message.content;
+      const content = this.normalizeUTF8(response.choices[0].message.content);
 
       // Try to parse JSON, handle potential markdown code blocks
       let jsonContent = content;

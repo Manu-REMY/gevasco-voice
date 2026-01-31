@@ -37,7 +37,7 @@ class AlbertProvider extends BaseProvider {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'Authorization': `Bearer ${this.apiKey}`
       },
       body: JSON.stringify(body)
@@ -131,7 +131,7 @@ class AlbertProvider extends BaseProvider {
           : response.generated_text || response;
 
         return {
-          content: typeof generatedText === 'string' ? generatedText.trim() : String(generatedText),
+          content: this.normalizeUTF8(typeof generatedText === 'string' ? generatedText.trim() : String(generatedText)),
           usage: null // HF doesn't provide usage stats
         };
       } else {
@@ -144,7 +144,7 @@ class AlbertProvider extends BaseProvider {
         });
 
         return {
-          content: response.choices?.[0]?.message?.content || response.content || '',
+          content: this.normalizeUTF8(response.choices?.[0]?.message?.content || response.content || ''),
           usage: response.usage
         };
       }

@@ -9,6 +9,28 @@ class BaseProvider {
   }
 
   /**
+   * Normalize UTF-8 text to fix double encoding issues
+   * Detects patterns like "Ã©" (é double-encoded) and fixes them
+   * @param {string} text - Text to normalize
+   * @returns {string} Normalized text
+   */
+  normalizeUTF8(text) {
+    if (!text || typeof text !== 'string') return text;
+
+    // Detect common double-encoded UTF-8 patterns
+    // "Ã©" = é, "Ã¨" = è, "Ã " = à, "Ã§" = ç, etc.
+    if (/Ã[©¨ ´§¹®¢ª«¯¼±â]|Ã©|Ã¨|Ã |Ã´|Ã§|Ã¹|Ã®|Ã¢|Ãª|Ã«|Ã¯|Ã¼|Ã±|Å"|Ã€|Ã‰|Ãˆ|Ã"|Ã™|Ã‡/.test(text)) {
+      try {
+        // Re-encode as latin1 then decode as UTF-8
+        return Buffer.from(text, 'latin1').toString('utf8');
+      } catch (e) {
+        return text;
+      }
+    }
+    return text;
+  }
+
+  /**
    * Check if provider is properly configured
    * @returns {boolean}
    */

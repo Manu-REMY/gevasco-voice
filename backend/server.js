@@ -18,6 +18,16 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
+// Force UTF-8 encoding on all JSON responses
+app.use((req, res, next) => {
+  const originalJson = res.json.bind(res);
+  res.json = (data) => {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return originalJson(data);
+  };
+  next();
+});
+
 // Serve static files from parent directory
 app.use(express.static(path.join(__dirname, '../')));
 

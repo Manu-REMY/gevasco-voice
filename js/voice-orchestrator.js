@@ -504,8 +504,15 @@ class VoiceOrchestrator {
    */
   async speakConfirmation(enriched) {
     try {
-      const summary = enriched.enrichedText.substring(0, 200);
-      const confirmationText = `J'ai bien compris. Voici ce que je retiens: ${summary}... Est-ce correct?`;
+      // Utiliser les points clés pour la relecture vocale
+      let keyPointsText = '';
+      if (enriched.keyPoints && enriched.keyPoints.length > 0) {
+        keyPointsText = enriched.keyPoints.join('. ');
+      } else {
+        // Fallback sur le texte enrichi si pas de points clés
+        keyPointsText = enriched.enrichedText;
+      }
+      const confirmationText = `J'ai bien compris. Voici les points clés: ${keyPointsText}. Est-ce correct?`;
 
       const audioBlob = await this.apiClient.textToSpeech(confirmationText);
       await this.playAudio(audioBlob);
