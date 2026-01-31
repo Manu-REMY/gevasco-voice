@@ -156,12 +156,26 @@ Les phrases de la bibliothèque utilisent:
 - Confidentialité totale des informations élèves
 
 ### Mode vocal (avec backend)
-Lorsque vous utilisez les fonctionnalités vocales, certaines données sont transmises à des services d'IA externes :
 
-| Fonction | Données transmises | Destinataire |
-|----------|-------------------|--------------|
-| Transcription (STT) | Fichier audio de votre voix | OpenAI Whisper, Mistral ou Albert (selon configuration) |
-| Enrichissement | Texte transcrit + contexte élève | OpenAI GPT, Mistral, Claude ou Albert (selon configuration) |
+#### Choix du mode de reconnaissance vocale
+
+L'application propose **deux modes de reconnaissance vocale** pour répondre aux exigences de confidentialité :
+
+![Toggle Local/Distant](screenshots/Local-distant.png)
+
+| Mode | Description | Confidentialité |
+|------|-------------|-----------------|
+| 🔒 **Local (navigateur)** | Utilise la Web Speech API du navigateur | ✅ Aucune donnée vocale transmise |
+| ☁️ **Distant (OpenAI)** | Utilise l'API Whisper d'OpenAI | ⚠️ Audio envoyé aux serveurs OpenAI |
+
+**Par défaut, le mode local est activé** pour garantir la confidentialité maximale. Vous pouvez basculer en mode distant si vous avez besoin d'une meilleure qualité de transcription.
+
+#### Données transmises selon le mode
+
+| Fonction | Mode Local | Mode Distant |
+|----------|-----------|--------------|
+| Transcription (STT) | Aucune donnée transmise | Fichier audio envoyé à OpenAI Whisper |
+| Enrichissement | Texte transcrit + contexte | Texte transcrit + contexte (identique) |
 
 **Données potentiellement concernées :**
 - Nom et informations de l'élève mentionnés oralement => ne jamais mentionner d'informations d'identité de l'élève lors de l'entretien vocal
