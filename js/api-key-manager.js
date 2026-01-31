@@ -5,6 +5,7 @@
 class APIKeyManager {
   constructor() {
     this.STORAGE_KEY = 'gevasco_openai_api_key';
+    this.STORAGE_KEY_STT_MODE = 'gevasco_stt_mode';
     this.modal = null;
     this.input = null;
     this.errorEl = null;
@@ -24,6 +25,7 @@ class APIKeyManager {
     this.validateBtn = document.getElementById('validate-api-key-btn');
 
     this.setupEventListeners();
+    this.initSTTModeToggle();
   }
 
   /**
@@ -284,6 +286,84 @@ class APIKeyManager {
         this.validateBtn.innerHTML = '<span class="btn-icon">✓</span><span>Valider la clé</span>';
       }
     }
+  }
+
+  // ============================================
+  // STT Mode Management
+  // ============================================
+
+  /**
+   * Initialize STT mode toggle
+   */
+  initSTTModeToggle() {
+    const toggle = document.getElementById('stt-mode-toggle');
+    if (!toggle) return;
+
+    // Load saved preference
+    const isRemote = this.getSTTMode() === 'remote';
+    toggle.checked = isRemote;
+    this.updateSTTModeUI(isRemote);
+
+    // Listen for changes
+    toggle.addEventListener('change', () => {
+      const isRemote = toggle.checked;
+      this.setSTTMode(isRemote ? 'remote' : 'local');
+      this.updateSTTModeUI(isRemote);
+    });
+  }
+
+  /**
+   * Update STT mode UI based on selection
+   */
+  updateSTTModeUI(isRemote) {
+    const warningBox = document.getElementById('stt-warning-box');
+    const infoLocal = document.getElementById('stt-info-local');
+    const optionLocal = document.querySelector('.stt-option-local');
+    const optionRemote = document.querySelector('.stt-option-remote');
+
+    if (isRemote) {
+      warningBox?.classList.remove('hidden');
+      infoLocal?.classList.add('hidden');
+      optionLocal?.classList.remove('active');
+      optionRemote?.classList.add('active');
+    } else {
+      warningBox?.classList.add('hidden');
+      infoLocal?.classList.remove('hidden');
+      optionLocal?.classList.add('active');
+      optionRemote?.classList.remove('active');
+    }
+  }
+
+  /**
+   * Set STT mode preference
+   * @param {string} mode - 'local' or 'remote'
+   */
+  setSTTMode(mode) {
+    try {
+      localStorage.setItem(this.STORAGE_KEY_STT_MODE, mode);
+    } catch (error) {
+      console.error('Error storing STT mode:', error);
+    }
+  }
+
+  /**
+   * Get STT mode preference
+   * @returns {string} 'local' or 'remote' (default: 'local')
+   */
+  getSTTMode() {
+    try {
+      return localStorage.getItem(this.STORAGE_KEY_STT_MODE) || 'local';
+    } catch (error) {
+      return 'local';
+    }
+  }
+
+  /**
+   * Check if Web Speech API is supported
+   * @returns {boolean}
+   */
+  isWebSpeechSupported() {
+    return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
   }
 }
 

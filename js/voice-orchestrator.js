@@ -15,6 +15,10 @@ class VoiceOrchestrator {
     this.audioChunks = [];
     this.currentAudio = null;
 
+    // Web Speech API for local STT
+    this.speechRecognition = null;
+    this.localTranscript = '';
+
     // Session ID pour le PDF original (utilisé pour le remplissage)
     this.pdfSessionId = null;
 
@@ -306,9 +310,87 @@ class VoiceOrchestrator {
   }
 
   /**
-   * Start recording
+   * Start recording - supports both local (Web Speech API) and remote (Whisper) modes
    */
   async startRecording() {
+    const sttMode = apiKeyManager.getSTTMode();
+
+    if (sttMode === 'local') {
+      await this.startLocalRecording();
+    } else {
+      await this.startRemoteRecording();
+    }
+  }
+
+  /**
+   * Start local recording using Web Speech API
+   */
+  async startLocalRecording() {
+    try {
+      // Check Web Speech API support
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        // Fallback to remote if not supported
+        this.ui.showToast('Web Speech API non supportée. Passage en mode distant.', 'info');
+        apiKeyManager.setSTTMode('remote');
+        apiKeyManager.updateSTTModeUI(true);
+        await this.startRemoteRecording();
+        return;
+      }
+
+      this.speechRecognition = new SpeechRecognition();
+      this.speechRecognition.lang = 'fr-FR';
+      this.speechRecognition.continuous = true;
+      this.speechRecognition.interimResults = true;
+      this.speechRecognition.maxAlternatives = 1;
+
+      this.localTranscript = '';
+      let interimTranscript = '';
+
+      this.speechRecognition.onresult = (event) => {
+        interimTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) {
+            this.localTranscript += result[0].transcript + ' ';
+          } else {
+            interimTranscript += result[0].transcript;
+          }
+        }
+        // Show real-time transcript
+        this.ui.displayTranscript(this.localTranscript + interimTranscript);
+      };
+
+      this.speechRecognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        if (event.error === 'no-speech') {
+          this.ui.showToast('Aucune parole détectée. Parlez plus fort.', 'info');
+        } else if (event.error === 'not-allowed') {
+          this.ui.showError('Accès au microphone refusé. Vérifiez les permissions.');
+          this.ui.setStatus('error', 'Accès refusé', 'Autorisez le microphone');
+        }
+      };
+
+      this.speechRecognition.onend = () => {
+        // Recognition ended - will be handled by stopRecording
+      };
+
+      this.speechRecognition.start();
+      this.ui.startRecordingAnimation();
+      this.ui.setStatus('recording', 'Je vous écoute...', '🔒 Mode local - Voix non transmise');
+
+    } catch (error) {
+      console.error('Local recording error:', error);
+      this.ui.showError('Erreur de reconnaissance vocale locale');
+      this.ui.setStatus('error', 'Erreur', 'Réessayez ou passez en mode distant');
+    }
+  }
+
+  /**
+   * Start remote recording using MediaRecorder (for Whisper API)
+   */
+  async startRemoteRecording() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -334,7 +416,7 @@ class VoiceOrchestrator {
 
       this.mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(this.audioChunks, { type: mimeType });
-        await this.processRecording(audioBlob);
+        await this.processRemoteRecording(audioBlob);
 
         // Stop all tracks
         stream.getTracks().forEach(track => track.stop());
@@ -342,7 +424,7 @@ class VoiceOrchestrator {
 
       this.mediaRecorder.start();
       this.ui.startRecordingAnimation();
-      this.ui.setStatus('recording', 'Je vous écoute...', 'Parlez clairement');
+      this.ui.setStatus('recording', 'Je vous écoute...', '☁️ Mode distant - Audio envoyé à OpenAI');
 
     } catch (error) {
       console.error('Recording Error:', error);
@@ -352,10 +434,22 @@ class VoiceOrchestrator {
   }
 
   /**
-   * Stop recording
+   * Stop recording - handles both local and remote modes
    */
   stopRecording() {
-    if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+    const sttMode = apiKeyManager.getSTTMode();
+
+    if (sttMode === 'local' && this.speechRecognition) {
+      this.speechRecognition.stop();
+      this.ui.stopRecordingAnimation();
+      this.ui.setStatus('processing', 'Traitement en cours...', 'Veuillez patienter');
+
+      // Process local transcript
+      setTimeout(() => {
+        this.processLocalRecording(this.localTranscript.trim());
+      }, 100);
+
+    } else if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
       this.mediaRecorder.stop();
       this.ui.stopRecordingAnimation();
       this.ui.setStatus('processing', 'Traitement en cours...', 'Veuillez patienter');
@@ -363,9 +457,56 @@ class VoiceOrchestrator {
   }
 
   /**
-   * Process recording
+   * Process local recording (Web Speech API transcript)
    */
-  async processRecording(audioBlob) {
+  async processLocalRecording(transcriptText) {
+    try {
+      if (!transcriptText || transcriptText.length < 5) {
+        this.ui.showError('Transcription trop courte. Veuillez reformuler.');
+        this.ui.enableRecording();
+        this.ui.setStatus('ready', 'Prêt à écouter', 'Reformulez votre réponse');
+        return;
+      }
+
+      this.ui.displayTranscript(transcriptText);
+
+      // Enrichissement via GPT-4
+      this.ui.setStatus('processing', 'Enrichissement IA...', 'Structuration de votre réponse');
+
+      const question = this.questions[this.currentQuestionIndex];
+      const existingData = this.session.getFormData();
+
+      const enriched = await this.apiClient.enrichResponse(
+        transcriptText,
+        question,
+        existingData
+      );
+
+      // Save to session
+      this.session.saveEnrichedResponse(question.id, transcriptText, enriched);
+
+      // Display enriched response
+      this.ui.displayEnrichedResponse(enriched);
+
+      // TTS confirmation
+      await this.speakConfirmation(enriched);
+
+      // Enable validation buttons
+      this.ui.enableValidationButtons();
+      this.ui.setStatus('ready', 'Validation requise', 'Validez ou reformulez votre réponse');
+
+    } catch (error) {
+      console.error('Processing Error:', error);
+      this.ui.showError('Erreur de traitement: ' + error.message);
+      this.ui.setStatus('error', 'Erreur de traitement', 'Cliquez sur "Commencer à parler" pour réessayer');
+      this.ui.enableRecording();
+    }
+  }
+
+  /**
+   * Process remote recording (Whisper API)
+   */
+  async processRemoteRecording(audioBlob) {
     try {
       // 1. Transcription via Whisper
       this.ui.setStatus('processing', 'Transcription...', 'Conversion de la parole en texte');
