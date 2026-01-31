@@ -24,3 +24,16 @@ API-KEY.md
 API-KEY.txt
 **/secrets/
 *.key
+
+# Documentation et anciennes versions (non nécessaires au fonctionnement)
+DEMARRAGE-RAPIDE*.md
+GUIDE_RAPIDE.md
+LISEZMOI.txt
+NOTES-DEVELOPPEMENT.md
+README-V*.md
+README-VOICE-V*.md
+index-v*.html
+css/styles-v*.css
+js/app-v*.js
+backend/test-setup.js
+backend/services/ai-providers/README.md
