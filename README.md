@@ -214,12 +214,8 @@ Gevasco/
 
 - Phrases types pour d'autres niveaux (GS, CE1, CE2)
 
-## 📞 Support
-
-Pour toute question ou suggestion d'amélioration, n'hésitez pas à contacter le développeur.
-
 ---
 
 **Version**: 1.0
-**Date**: Janvier 2025
+**Date**: Janvier 2026
 **Licence**: Usage éducatif
