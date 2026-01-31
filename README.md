@@ -161,7 +161,7 @@ Les phrases de la bibliothèque utilisent:
 
 L'application propose **deux modes de reconnaissance vocale** pour répondre aux exigences de confidentialité :
 
-![Toggle Local/Distant](screenshots/Local-distant.png)
+<img src="screenshots/Local-distant.png" alt="Toggle Local/Distant" width="400">
 
 | Mode | Description | Confidentialité |
 |------|-------------|-----------------|
