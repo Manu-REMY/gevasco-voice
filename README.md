@@ -174,10 +174,8 @@ Lorsque vous utilisez les fonctionnalités vocales, certaines données sont tran
 - Aucune donnée n'est stockée de façon permanente côté serveur
 - Les échanges avec les API sont chiffrés (HTTPS)
 
-**Recommandations :**
-- Pour une souveraineté totale des données, privilégiez le provider **Albert** (hébergé en France par l'État)
-- Informez les personnes concernées que leurs données vocales sont traitées par des services tiers
-- Évitez de mentionner oralement des informations médicales sensibles non nécessaires
+**Rôle de l'IA :**
+L'intelligence artificielle utilisée dans cet outil est uniquement un **assistant rédactionnel**. Aucune décision concernant la scolarité de l'élève ou les aménagements pédagogiques n'est prise par l'IA. **L'enseignant reste seul décisionnaire** de toutes les observations, analyses et préconisations inscrites dans le document GEVA-Sco.
 
 **Configuration du provider :** Voir la variable `AI_PROVIDER` dans le fichier `.env`
 
@@ -214,18 +212,7 @@ Gevasco/
 
 ## 🔮 Évolutions futures possibles
 
-- Import/export de profils d'élèves
-- Templates personnalisables
 - Phrases types pour d'autres niveaux (GS, CE1, CE2)
-- Statistiques sur les besoins identifiés
-- Version imprimable sans PDF
-
-## ⚠️ Notes importantes
-
-- Vérifiez toujours les informations avant de générer le PDF
-- Personnalisez les observations selon chaque élève
-- Les phrases types sont des suggestions, adaptez-les à votre contexte
-- Sauvegardez régulièrement si vous travaillez longtemps
 
 ## 📞 Support
 
