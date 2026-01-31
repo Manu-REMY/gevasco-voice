@@ -164,7 +164,7 @@ Lorsque vous utilisez les fonctionnalités vocales, certaines données sont tran
 | Enrichissement | Texte transcrit + contexte élève | OpenAI GPT, Mistral, Claude ou Albert (selon configuration) |
 
 **Données potentiellement concernées :**
-- Nom et informations de l'élève mentionnés oralement
+- Nom et informations de l'élève mentionnés oralement => ne jamais mentionner d'informations d'identité de l'élève lors de l'entretien vocal
 - Observations comportementales et pédagogiques
 - Difficultés d'apprentissage évoquées
 - Tout autre contenu verbal
