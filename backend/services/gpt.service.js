@@ -1,8 +1,8 @@
 const path = require('path');
 const { getChatProvider } = require('./ai-providers');
 
-// Load phrases library
-const phrasesCP = require(path.join(__dirname, '../../js/phrases-cp.js'));
+// Load phrases library (multi-level support)
+const { phrasesParNiveau, getPhrasesForLevel } = require(path.join(__dirname, '../../js/phrases.js'));
 
 class GPTService {
   constructor() {
@@ -20,26 +20,32 @@ class GPTService {
     return this.provider;
   }
 
-  async enrichResponse(transcript, questionContext, existingData) {
+  async enrichResponse(transcript, questionContext, existingData, level = 'CP') {
     try {
-      const systemPrompt = `Tu es un assistant spécialisé dans les évaluations GEVA-Sco pour élèves de CP en France.
+      // Récupérer les phrases adaptées au niveau
+      const levelPhrases = getPhrasesForLevel(level);
+      const levelLabel = this._getLevelLabel(level);
+
+      const systemPrompt = `Tu es un assistant spécialisé dans les évaluations GEVA-Sco pour élèves de ${levelLabel} en France.
 
 Ton rôle:
 - Analyser les réponses orales des enseignants
 - Extraire les informations clés
 - Structurer les observations de manière professionnelle
 - Respecter le vocabulaire et les formulations de l'Éducation Nationale française
+- Adapter le niveau de langage et les attentes au niveau scolaire (${levelLabel})
 - Proposer des phrases tirées de la bibliothèque fournie quand pertinent
 
 Formule tes réponses de manière concise, factuelle et professionnelle.
 Utilise le présent de l'indicatif.
 Reste factuel et évite les jugements de valeur.`;
 
-      const phrasesCategory = phrasesCP[questionContext.category] || {};
+      const phrasesCategory = levelPhrases[questionContext.category] || {};
 
       const userPrompt = `CONTEXTE DE LA QUESTION:
 Question ID: ${questionContext.id}
 Catégorie: ${questionContext.category}
+Niveau scolaire: ${levelLabel}
 Champs cibles: ${questionContext.targetFields.join(', ')}
 
 DONNÉES EXISTANTES SUR L'ÉLÈVE:
@@ -84,9 +90,32 @@ RETOURNE EXACTEMENT AU FORMAT JSON (pas de texte avant ou après):
     }
   }
 
-  async generateSummary(formData) {
+  /**
+   * Get human-readable label for a level code
+   */
+  _getLevelLabel(level) {
+    const labels = {
+      'CP': 'CP (Cours Préparatoire)',
+      'CE1': 'CE1 (Cours Élémentaire 1)',
+      'CE2': 'CE2 (Cours Élémentaire 2)',
+      'CM1': 'CM1 (Cours Moyen 1)',
+      'CM2': 'CM2 (Cours Moyen 2)',
+      '6EME': '6ème',
+      '5EME': '5ème',
+      '4EME': '4ème',
+      '3EME': '3ème',
+      'ULIS_ECOLE': 'ULIS école',
+      'ULIS_COLLEGE': 'ULIS collège',
+      'SEGPA': 'SEGPA',
+      'IME': 'IME'
+    };
+    return labels[level] || level;
+  }
+
+  async generateSummary(formData, level = 'CP') {
     try {
-      const systemPrompt = `Tu es un assistant qui génère des résumés vocaux clairs et concis pour valider les informations d'un GEVA-Sco avant génération du PDF final.`;
+      const levelLabel = this._getLevelLabel(level);
+      const systemPrompt = `Tu es un assistant qui génère des résumés vocaux clairs et concis pour valider les informations d'un GEVA-Sco (niveau ${levelLabel}) avant génération du PDF final.`;
 
       const userPrompt = `Génère un résumé vocal structuré des observations pédagogiques suivantes:
 

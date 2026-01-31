@@ -316,6 +316,65 @@ body {
 }
 
 /* ============================================
+   LEVEL SELECTOR
+   ============================================ */
+
+.level-selector {
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--color-white);
+    border-radius: 12px;
+    border: 2px solid var(--color-primary);
+}
+
+.level-selector label {
+    display: block;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 12px;
+    font-size: 1.1em;
+}
+
+.level-dropdown {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1em;
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-white);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: var(--transition);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 48px;
+}
+
+.level-dropdown:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.2);
+}
+
+.level-dropdown:hover {
+    border-color: var(--color-primary);
+}
+
+.level-dropdown optgroup {
+    font-weight: 700;
+    color: var(--color-primary);
+    padding: 8px 0;
+}
+
+.level-dropdown option {
+    font-weight: 400;
+    color: var(--color-text);
+    padding: 8px 12px;
+}
+
+/* ============================================
    PROGRESS BAR
    ============================================ */
 

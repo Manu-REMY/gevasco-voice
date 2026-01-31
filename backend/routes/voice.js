@@ -82,7 +82,7 @@ router.post('/transcribe', upload.single('audio'), async (req, res) => {
 // Enrich transcription with GPT-4
 router.post('/enrich', async (req, res) => {
   try {
-    const { transcript, questionContext, existingData } = req.body;
+    const { transcript, questionContext, existingData, level } = req.body;
 
     if (!transcript) {
       return res.status(400).json({
@@ -101,7 +101,8 @@ router.post('/enrich', async (req, res) => {
     const enriched = await gptService.enrichResponse(
       transcript,
       questionContext,
-      existingData || {}
+      existingData || {},
+      level || 'CP'
     );
 
     res.json({
@@ -156,7 +157,7 @@ router.post('/tts', async (req, res) => {
 // Generate final summary
 router.post('/summary', async (req, res) => {
   try {
-    const { formData } = req.body;
+    const { formData, level } = req.body;
 
     if (!formData) {
       return res.status(400).json({
@@ -165,7 +166,7 @@ router.post('/summary', async (req, res) => {
       });
     }
 
-    const summary = await gptService.generateSummary(formData);
+    const summary = await gptService.generateSummary(formData, level || 'CP');
 
     res.json({
       success: true,

@@ -11,6 +11,7 @@ class VoiceSession {
     this.currentEnrichedResponse = null;
     this.startTime = null;
     this.questionStartTime = null;
+    this.level = 'CP'; // Niveau scolaire sélectionné
   }
 
   /**
@@ -28,6 +29,21 @@ class VoiceSession {
     this.startTime = new Date();
     this.responses = [];
     this.saveToLocalStorage();
+  }
+
+  /**
+   * Set the school level for this session
+   */
+  setLevel(level) {
+    this.level = level;
+    this.saveToLocalStorage();
+  }
+
+  /**
+   * Get the school level for this session
+   */
+  getLevel() {
+    return this.level;
   }
 
   /**
@@ -124,6 +140,7 @@ class VoiceSession {
       formData: this.formData,
       responses: this.responses,
       startTime: this.startTime,
+      level: this.level,
       lastSaved: new Date().toISOString()
     };
 
@@ -141,6 +158,7 @@ class VoiceSession {
       this.formData = sessionData.formData || {};
       this.responses = sessionData.responses || [];
       this.startTime = sessionData.startTime ? new Date(sessionData.startTime) : null;
+      this.level = sessionData.level || 'CP';
       return true;
     }
     return false;
@@ -157,6 +175,7 @@ class VoiceSession {
     this.currentEnrichedResponse = null;
     this.startTime = null;
     this.questionStartTime = null;
+    this.level = 'CP';
     localStorage.removeItem('geva_voice_session');
   }
 
@@ -168,6 +187,7 @@ class VoiceSession {
       extractedPDFData: this.extractedPDFData,
       formData: this.formData,
       responses: this.responses,
+      level: this.level,
       duration: this.getSessionDuration(),
       completedAt: new Date().toISOString()
     };

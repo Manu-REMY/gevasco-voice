@@ -133,6 +133,33 @@
             <div id="extraction-result" class="extraction-result" style="display:none;">
                 <h3>✓ Données extraites du PDF</h3>
                 <div id="extracted-data" class="extracted-data"></div>
+
+                <!-- Sélecteur de niveau -->
+                <div class="level-selector">
+                    <label for="level-select">Niveau de l'élève :</label>
+                    <select id="level-select" class="level-dropdown">
+                        <optgroup label="Élémentaire">
+                            <option value="CP">CP - Cours Préparatoire</option>
+                            <option value="CE1">CE1 - Cours Élémentaire 1</option>
+                            <option value="CE2">CE2 - Cours Élémentaire 2</option>
+                            <option value="CM1">CM1 - Cours Moyen 1</option>
+                            <option value="CM2">CM2 - Cours Moyen 2</option>
+                        </optgroup>
+                        <optgroup label="Collège">
+                            <option value="6EME">6ème</option>
+                            <option value="5EME">5ème</option>
+                            <option value="4EME">4ème</option>
+                            <option value="3EME">3ème</option>
+                        </optgroup>
+                        <optgroup label="Dispositifs spécialisés">
+                            <option value="ULIS_ECOLE">ULIS école</option>
+                            <option value="ULIS_COLLEGE">ULIS collège</option>
+                            <option value="SEGPA">SEGPA</option>
+                            <option value="IME">IME</option>
+                        </optgroup>
+                    </select>
+                </div>
+
                 <div class="extraction-actions">
                     <button id="edit-extracted-btn" class="btn btn-secondary">✏️ Corriger les données</button>
                     <button id="start-interview-btn" class="btn btn-primary">Démarrer l'entretien vocal →</button>
@@ -270,7 +297,8 @@
 
     <!-- Scripts -->
     <script src="js/api-key-manager.js"></script>
-    <script src="js/phrases-cp.js"></script>
+    <script src="js/questions-config.js"></script>
+    <script src="js/phrases.js"></script>
     <script src="js/voice-session.js"></script>
     <script src="js/voice-api-client.js"></script>
     <script src="js/voice-ui.js"></script>

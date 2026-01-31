@@ -8,7 +8,9 @@ class VoiceOrchestrator {
     this.session = new VoiceSession();
     this.ui = new VoiceUI();
 
-    this.questions = this.defineQuestions();
+    // Niveau scolaire sélectionné (par défaut CP)
+    this.selectedLevel = 'CP';
+    this.questions = [];
     this.currentQuestionIndex = 0;
 
     this.mediaRecorder = null;
@@ -72,81 +74,12 @@ class VoiceOrchestrator {
   }
 
   /**
-   * Define interview questions
+   * Define interview questions (deprecated - now uses questions-config.js)
+   * Kept for backwards compatibility, returns questions for selected level
    */
   defineQuestions() {
-    return [
-      {
-        id: 'vue_ensemble',
-        text: "Parlez-moi de cet élève de manière générale. Comment se comporte-t-il en classe? Comment se passe son année de CP? Prenez le temps de me décrire la situation globalement.",
-        category: 'comportement',
-        targetFields: ['eval_observations', 'comportement'],
-        duration: 180
-      },
-      {
-        id: 'comportement_detail',
-        text: "Décrivez-moi plus précisément le comportement de l'élève en classe. Comment gère-t-il ses émotions? Comment sont ses relations avec les autres élèves et avec vous? Y a-t-il des situations particulières où vous observez des difficultés?",
-        category: 'comportement',
-        targetFields: ['comportement', 'obs_cadre1', 'obs_cadre2'],
-        duration: 150
-      },
-      {
-        id: 'lecture',
-        text: "Où en est cet élève dans l'apprentissage de la lecture? Reconnaît-il les lettres? Arrive-t-il à décoder des syllabes, des mots? Y a-t-il des confusions de sons? Donnez-moi des exemples concrets de ce qu'il sait faire et de ses difficultés.",
-        category: 'francais',
-        targetFields: ['francais'],
-        duration: 150
-      },
-      {
-        id: 'ecriture',
-        text: "Et concernant l'écriture? Comment se passe le geste graphique? L'élève respecte-t-il le lignage? Y a-t-il des difficultés particulières avec certaines lettres ou avec la tenue du crayon?",
-        category: 'francais',
-        targetFields: ['francais'],
-        duration: 120
-      },
-      {
-        id: 'comprehension',
-        text: "Comment se passe la compréhension orale? L'élève comprend-il les consignes? Arrive-t-il à s'exprimer clairement? Participe-t-il aux échanges collectifs?",
-        category: 'francais',
-        targetFields: ['francais'],
-        duration: 120
-      },
-      {
-        id: 'mathematiques',
-        text: "Parlons des mathématiques. Où en est l'élève dans la connaissance des nombres, le dénombrement, le calcul? A-t-il besoin de matériel de manipulation? Y a-t-il des notions qui sont acquises, d'autres en cours d'acquisition?",
-        category: 'mathematiques',
-        targetFields: ['mathematiques'],
-        duration: 150
-      },
-      {
-        id: 'autonomie',
-        text: "Comment se débrouille l'élève au niveau de l'autonomie? Gère-t-il son matériel? Peut-il travailler seul? A-t-il besoin d'être beaucoup accompagné?",
-        category: 'autonomie',
-        targetFields: ['autonomie'],
-        duration: 120
-      },
-      {
-        id: 'besoins',
-        text: "D'après vous, quels sont les principaux besoins de cet élève pour progresser? De quoi a-t-il besoin au quotidien?",
-        category: 'besoins',
-        targetFields: ['besoins'],
-        duration: 120
-      },
-      {
-        id: 'amenagements',
-        text: "Quels aménagements pédagogiques avez-vous mis en place ou souhaitez-vous mettre en place? Pensez-vous qu'un accompagnement spécifique serait nécessaire? AESH, RASED, orthophoniste, autre?",
-        category: 'amenagements',
-        targetFields: ['amenagements', 'propositions'],
-        duration: 180
-      },
-      {
-        id: 'evolutions',
-        text: "Pour finir, parlez-moi des progrès que vous avez observés depuis le début de l'année. Comment voyez-vous la suite du parcours de cet élève?",
-        category: 'propositions',
-        targetFields: ['obs_evolutions', 'propositions'],
-        duration: 180
-      }
-    ];
+    // Utilise la configuration centralisée des questions
+    return getQuestionsForLevel(this.selectedLevel);
   }
 
   /**
@@ -229,9 +162,26 @@ class VoiceOrchestrator {
    * Start the interview
    */
   async startInterview() {
+    // Récupérer le niveau sélectionné
+    const levelSelect = document.getElementById('level-select');
+    this.selectedLevel = levelSelect ? levelSelect.value : 'CP';
+
+    // Charger les questions adaptées au niveau
+    this.questions = getQuestionsForLevel(this.selectedLevel);
+
+    console.log(`Démarrage de l'entretien pour le niveau: ${this.selectedLevel}`);
+    console.log(`Nombre de questions: ${this.questions.length}`);
+
     this.currentQuestionIndex = 0;
     this.session.startInterview();
+    this.session.setLevel(this.selectedLevel);
     this.ui.showSection('interview');
+
+    // Mettre à jour le nombre total de questions dans l'UI
+    const totalQuestionsEl = document.getElementById('total-questions');
+    if (totalQuestionsEl) {
+      totalQuestionsEl.textContent = this.questions.length;
+    }
 
     await this.askNextQuestion();
   }
@@ -479,7 +429,8 @@ class VoiceOrchestrator {
       const enriched = await this.apiClient.enrichResponse(
         transcriptText,
         question,
-        existingData
+        existingData,
+        this.selectedLevel
       );
 
       // Save to session
@@ -523,7 +474,8 @@ class VoiceOrchestrator {
       const enriched = await this.apiClient.enrichResponse(
         transcript.text || transcript,
         question,
-        existingData
+        existingData,
+        this.selectedLevel
       );
 
       // 3. Save to session
@@ -607,7 +559,7 @@ class VoiceOrchestrator {
 
     try {
       const formData = this.session.getFormData();
-      const summary = await this.apiClient.generateSummary(formData);
+      const summary = await this.apiClient.generateSummary(formData, this.selectedLevel);
 
       this.ui.displaySummary(summary);
       this.ui.showToast('Entretien terminé avec succès', 'success');

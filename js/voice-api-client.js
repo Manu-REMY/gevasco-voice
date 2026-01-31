@@ -53,7 +53,7 @@ class VoiceAPIClient {
   /**
    * Enrich transcript with GPT-4
    */
-  async enrichResponse(transcript, questionContext, existingData) {
+  async enrichResponse(transcript, questionContext, existingData, level = 'CP') {
     const response = await fetch(`${this.baseURL}/voice/enrich`, {
       method: 'POST',
       headers: {
@@ -62,7 +62,8 @@ class VoiceAPIClient {
       body: JSON.stringify({
         transcript: transcript,
         questionContext: questionContext,
-        existingData: existingData
+        existingData: existingData,
+        level: level
       })
     });
 
@@ -100,14 +101,15 @@ class VoiceAPIClient {
   /**
    * Generate final summary
    */
-  async generateSummary(formData) {
+  async generateSummary(formData, level = 'CP') {
     const response = await fetch(`${this.baseURL}/voice/summary`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        formData: formData
+        formData: formData,
+        level: level
       })
     });
 

@@ -1,8 +1,14 @@
-# Générateur GEVA-Sco pour CP
+# Générateur GEVA-Sco Multi-niveaux
 
 ## 📋 Description
 
-Outil interactif pour faciliter et accélérer le remplissage des documents GEVA-Sco (Guide d'Évaluation des besoins de compensation en matière de Scolarisation) pour les élèves de CP.
+Outil interactif pour faciliter et accélérer le remplissage des documents GEVA-Sco (Guide d'Évaluation des besoins de compensation en matière de Scolarisation) pour tous les niveaux scolaires.
+
+### Niveaux supportés
+
+- **Élémentaire** : CP, CE1, CE2, CM1, CM2
+- **Collège** : 6ème, 5ème, 4ème, 3ème
+- **Dispositifs spécialisés** : ULIS école, ULIS collège, SEGPA, IME
 
 ## ✨ Fonctionnalités principales
 
@@ -12,8 +18,9 @@ Outil interactif pour faciliter et accélérer le remplissage des documents GEVA
 - Validation automatique des données
 
 ### 2. **Bibliothèque de phrases types**
-- Plus de 100 phrases pré-rédigées adaptées au niveau CP
+- Phrases pré-rédigées adaptées à chaque niveau scolaire
 - Catégories: comportement, français, mathématiques, autonomie, besoins, aménagements
+- Questions spécifiques par niveau (collège: orientation, ULIS: inclusion, etc.)
 - Insertion en un clic dans les champs correspondants
 - Formulations professionnelles et conformes aux attentes
 
@@ -210,14 +217,22 @@ L'intelligence artificielle utilisée dans cet outil est uniquement un **assista
 
 ```
 Gevasco/
-├── index.html              # Page principale
+├── index.html              # Page principale (interface vocale V3)
 ├── css/
-│   └── styles.css         # Styles de l'application
+│   └── voice-styles.css   # Styles de l'application
 ├── js/
-│   ├── app.js            # Logique principale
-│   └── phrases-cp.js     # Bibliothèque de phrases
-├── data/                  # (futur) Templates et exports
-└── README.md             # Ce fichier
+│   ├── voice-orchestrator.js  # Coordinateur principal
+│   ├── voice-session.js       # Gestion de la session
+│   ├── voice-ui.js            # Interface utilisateur
+│   ├── voice-api-client.js    # Communication avec le backend
+│   ├── api-key-manager.js     # Gestion des clés API
+│   ├── questions-config.js    # Configuration des questions par niveau
+│   └── phrases.js             # Bibliothèque de phrases par niveau
+├── backend/
+│   ├── server.js              # Serveur Express
+│   ├── routes/                # Routes API
+│   └── services/              # Services (GPT, TTS, Whisper)
+└── README.md                  # Ce fichier
 ```
 
 ## 🎯 Avantages
