@@ -170,6 +170,18 @@ L'application propose **deux modes de reconnaissance vocale** pour répondre aux
 
 **Par défaut, le mode local est activé** pour garantir la confidentialité maximale. Vous pouvez basculer en mode distant si vous avez besoin d'une meilleure qualité de transcription.
 
+#### Compatibilité navigateurs (mode local)
+
+| Navigateur | Support | Notes |
+|------------|---------|-------|
+| **Chrome** | ✅ Complet | Recommandé |
+| **Edge** | ✅ Complet | Basé sur Chromium |
+| **Safari** | ⚠️ Partiel | iOS 14.5+ / macOS Big Sur+ |
+| **Firefox** | ❌ Non supporté | Désactivé par défaut |
+| **Opera** | ✅ Complet | Basé sur Chromium |
+
+> **Note** : Si votre navigateur ne supporte pas le mode local, l'application bascule automatiquement en mode distant.
+
 #### Données transmises selon le mode
 
 | Fonction | Mode Local | Mode Distant |
