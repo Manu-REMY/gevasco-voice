@@ -141,14 +141,45 @@ Les phrases de la bibliothèque utilisent:
 - Pas besoin de connexion Internet après le premier chargement
 
 ### Données
-- Stockées localement dans votre navigateur (localStorage)
-- Aucune donnée n'est envoyée sur Internet
-- Confidentialité totale des informations élèves
+- Voir la section **Protection des données et RGPD** ci-dessous pour les détails complets
 
 ### Performance
 - Application légère et rapide
 - Génération PDF instantanée
 - Pas de ralentissement même avec beaucoup de texte
+
+## 🔒 Protection des données et RGPD
+
+### Mode hors-ligne (formulaire seul)
+- Données stockées localement dans votre navigateur (localStorage)
+- Aucune donnée envoyée sur Internet
+- Confidentialité totale des informations élèves
+
+### Mode vocal (avec backend)
+Lorsque vous utilisez les fonctionnalités vocales, certaines données sont transmises à des services d'IA externes :
+
+| Fonction | Données transmises | Destinataire |
+|----------|-------------------|--------------|
+| Transcription (STT) | Fichier audio de votre voix | OpenAI Whisper, Mistral ou Albert (selon configuration) |
+| Enrichissement | Texte transcrit + contexte élève | OpenAI GPT, Mistral, Claude ou Albert (selon configuration) |
+
+**Données potentiellement concernées :**
+- Nom et informations de l'élève mentionnés oralement
+- Observations comportementales et pédagogiques
+- Difficultés d'apprentissage évoquées
+- Tout autre contenu verbal
+
+**Mesures de protection :**
+- Les fichiers audio sont supprimés du serveur immédiatement après transcription
+- Aucune donnée n'est stockée de façon permanente côté serveur
+- Les échanges avec les API sont chiffrés (HTTPS)
+
+**Recommandations :**
+- Pour une souveraineté totale des données, privilégiez le provider **Albert** (hébergé en France par l'État)
+- Informez les personnes concernées que leurs données vocales sont traitées par des services tiers
+- Évitez de mentionner oralement des informations médicales sensibles non nécessaires
+
+**Configuration du provider :** Voir la variable `AI_PROVIDER` dans le fichier `.env`
 
 ## 📁 Structure du projet
 
